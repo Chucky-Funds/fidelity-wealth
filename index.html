@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fidelity Wealth Scheme | Secure Investment Lending</title>
-    <meta name="description" content="Join Fidelity Wealth Scheme. Earn 10% daily returns by powering global loans. Secure, transparent, and professional.">
+    <title>Fidelity Wealth Scheme | Professional Institutional Lending</title>
     
-    <!-- Tailwind CSS for professional styling -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,11 +13,12 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- AOS Animations -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Swiper.js for Testimonial Slider -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
 
     <style>
         body { font-family: 'Inter', sans-serif; }
         .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        .accent-color { color: #fbbf24; } /* Gold accent */
         .btn-primary { 
             background: #fbbf24; 
             transition: all 0.3s ease;
@@ -26,211 +26,353 @@
         .btn-primary:hover { 
             background: #f59e0b; 
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.3);
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.4);
         }
         .glass-nav {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
         }
-        /* Fix for very small screens */
+        /* Mobile Menu Overlay */
+        #mobileMenu {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+        #mobileMenu.active {
+            transform: translateX(0);
+        }
+        /* Slider dots color */
+        .swiper-pagination-bullet-active { background: #fbbf24 !important; }
+        
+        /* Fix for mobile text overlap */
+        @media (max-width: 768px) {
+            .hero-section { padding-top: 140px !important; }
+        }
         @media (max-width: 320px) {
-            h1 { font-size: 1.75rem !important; }
-            .hide-xs { display: none; }
+            h1 { font-size: 1.8rem !important; }
         }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 overflow-x-hidden">
 
     <!-- NAVIGATION -->
-    <nav class="fixed w-full z-50 glass-nav border-b border-slate-700 py-4">
+    <nav class="fixed w-full z-[100] glass-nav border-b border-slate-800 py-4">
         <div class="container mx-auto px-6 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <div class="bg-yellow-500 p-1.5 rounded-lg">
                     <i data-lucide="shield-check" class="text-slate-900 w-6 h-6"></i>
                 </div>
-                <span class="text-white font-bold text-xl tracking-tight">FIDELITY <span class="text-yellow-500 underline decoration-2 underline-offset-4">WEALTH</span></span>
+                <span class="text-white font-bold text-xl tracking-tight uppercase">Fidelity <span class="text-yellow-500">Wealth</span></span>
             </div>
             
             <!-- Desktop Links -->
-            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
+            <div class="hidden lg:flex space-x-8 text-sm font-semibold text-slate-300">
                 <a href="#home" class="hover:text-yellow-500 transition-colors">Home</a>
                 <a href="#about" class="hover:text-yellow-500 transition-colors">How it Works</a>
-                <a href="#security" class="hover:text-yellow-500 transition-colors">Security</a>
+                <a href="#withdraw" class="hover:text-yellow-500 transition-colors">Withdrawal</a>
+                <a href="#testimonials" class="hover:text-yellow-500 transition-colors">Testimonials</a>
                 <a href="#faq" class="hover:text-yellow-500 transition-colors">FAQ</a>
+                <a href="#contact" class="hover:text-yellow-500 transition-colors">Contact</a>
             </div>
 
             <div class="flex items-center space-x-4">
-                <button class="text-white text-sm font-semibold hidden sm:block">Login</button>
-                <button class="btn-primary text-slate-900 px-5 py-2.5 rounded-full text-sm font-bold">Get Started</button>
-                <!-- Mobile Menu Icon -->
-                <button class="md:hidden text-white" id="menuBtn">
+                <button class="btn-primary text-slate-900 px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider">Get Started</button>
+                <button class="lg:hidden text-white" id="openMenu">
                     <i data-lucide="menu"></i>
                 </button>
             </div>
         </div>
     </nav>
 
+    <!-- MOBILE MENU -->
+    <div id="mobileMenu" class="fixed inset-0 z-[110] bg-slate-950 flex flex-col p-8 lg:hidden">
+        <div class="flex justify-end">
+            <button id="closeMenu" class="text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
+        </div>
+        <div class="flex flex-col space-y-8 mt-12 text-center text-xl font-medium text-slate-300">
+            <a href="#home" class="mobile-link">Home</a>
+            <a href="#about" class="mobile-link">How it Works</a>
+            <a href="#withdraw" class="mobile-link">Withdrawal</a>
+            <a href="#testimonials" class="mobile-link">Testimonials</a>
+            <a href="#faq" class="mobile-link">FAQ</a>
+            <a href="#contact" class="mobile-link">Contact Us</a>
+            <button class="btn-primary text-slate-900 px-6 py-4 rounded-xl text-lg font-bold">Get Started Now</button>
+        </div>
+    </div>
+
     <!-- HERO SECTION -->
-    <section id="home" class="gradient-bg min-h-screen flex items-center pt-20">
+    <section id="home" class="gradient-bg min-h-screen flex items-center hero-section pt-32 lg:pt-20">
         <div class="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-            <div data-aos="fade-right" data-aos-duration="1000">
+            <div data-aos="fade-right">
+                <div class="inline-flex items-center space-x-2 bg-yellow-500/10 border border-yellow-500/20 px-3 py-1 rounded-full text-yellow-500 text-xs font-bold mb-6">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                    </span>
+                    <span>SYSTEM ONLINE & PAYING</span>
+                </div>
                 <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight">
                     Your Capital. <br>
                     <span class="text-yellow-500">Accelerated</span> Growth.
                 </h1>
                 <p class="mt-6 text-slate-400 text-lg md:text-xl max-w-lg leading-relaxed">
-                    Join the Fidelity Wealth Scheme. We utilize your deposits to provide secured micro-loans, returning 10% daily until your investment doubles. 
+                    Powering global enterprise through micro-lending. Earn a fixed 10% daily return until your deposit reaches 200%.
                 </p>
                 <div class="mt-10 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                     <button class="btn-primary text-slate-900 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center">
                         Create Free Account <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
                     </button>
-                    <button class="border border-slate-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-800 transition-all">
-                        View Live Stats
-                    </button>
-                </div>
-                <div class="mt-8 flex items-center space-x-6 text-slate-500 text-sm">
-                    <div class="flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-2 text-green-500"></i> Secured by Fidelity</div>
-                    <div class="flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-2 text-green-500"></i> Verified Payouts</div>
                 </div>
             </div>
-            <div class="relative" data-aos="zoom-in" data-aos-duration="1200">
-                <div class="bg-slate-800/50 p-8 rounded-3xl border border-slate-700 backdrop-blur-sm relative z-10">
+            <div class="relative" data-aos="zoom-in">
+                <div class="bg-slate-800/40 p-8 rounded-3xl border border-slate-700 backdrop-blur-sm relative z-10">
                     <div class="flex justify-between items-center mb-8">
                         <div>
-                            <p class="text-slate-400 text-sm">Estimated Daily Returns</p>
-                            <h3 class="text-3xl font-bold text-white">10.00%</h3>
+                            <p class="text-slate-400 text-sm uppercase font-bold tracking-widest">Growth Performance</p>
+                            <h3 class="text-3xl font-bold text-white">10.00% <span class="text-sm font-normal text-slate-400">/ Day</span></h3>
                         </div>
-                        <i data-lucide="trending-up" class="text-green-500 w-10 h-10"></i>
+                        <i data-lucide="bar-chart-3" class="text-yellow-500 w-10 h-10"></i>
                     </div>
-                    <!-- Mock Dashboard -->
                     <div class="space-y-4">
                         <div class="bg-slate-900/50 p-4 rounded-xl flex justify-between items-center border border-slate-700/50">
-                            <span class="text-slate-300">Initial Deposit</span>
-                            <span class="text-white font-mono">$10,000.00</span>
+                            <span class="text-slate-300">Active Deposit</span>
+                            <span class="text-white font-mono font-bold">$10,000.00</span>
                         </div>
                         <div class="bg-slate-900/50 p-4 rounded-xl flex justify-between items-center border border-slate-700/50">
-                            <span class="text-slate-300">Daily Profit (10%)</span>
-                            <span class="text-green-400 font-mono">+$1,000.00</span>
+                            <span class="text-slate-300">Daily ROI</span>
+                            <span class="text-green-400 font-mono font-bold">+$1,000.00</span>
                         </div>
                         <div class="bg-yellow-500/10 p-4 rounded-xl flex justify-between items-center border border-yellow-500/20">
-                            <span class="text-yellow-500 font-semibold">Total Target (2x)</span>
+                            <span class="text-yellow-500 font-bold">Auto-Withdraw Target</span>
                             <span class="text-yellow-500 font-mono font-bold">$20,000.00</span>
                         </div>
                     </div>
-                </div>
-                <!-- Decorative Glow -->
-                <div class="absolute -top-20 -right-20 w-64 h-64 bg-yellow-500/10 blur-[100px] rounded-full"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FEATURES / STATS -->
-    <section class="py-20 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-3 gap-12 text-center">
-                <div data-aos="fade-up">
-                    <div class="bg-blue-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <i data-lucide="users" class="text-blue-600 w-8 h-8"></i>
-                    </div>
-                    <h4 class="text-4xl font-bold mb-2">12k+</h4>
-                    <p class="text-slate-500 font-medium">Active Lenders</p>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="100">
-                    <div class="bg-yellow-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <i data-lucide="landmark" class="text-yellow-600 w-8 h-8"></i>
-                    </div>
-                    <h4 class="text-4xl font-bold mb-2">$45M+</h4>
-                    <p class="text-slate-500 font-medium">Loans Disbursed</p>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="200">
-                    <div class="bg-green-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <i data-lucide="shield-check" class="text-green-600 w-8 h-8"></i>
-                    </div>
-                    <h4 class="text-4xl font-bold mb-2">100%</h4>
-                    <p class="text-slate-500 font-medium">Payout Rate</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- HOW IT WORKS -->
-    <section id="about" class="py-24 bg-slate-50">
+    <section id="about" class="py-24 bg-white">
         <div class="container mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-sm font-bold text-yellow-600 uppercase tracking-widest mb-4">The Process</h2>
-                <h3 class="text-3xl md:text-5xl font-bold text-slate-900">Simple. Transparent. Powerful.</h3>
-                <p class="text-slate-600 mt-6 text-lg">Fidelity Wealth Scheme bridges the gap between private capital and credit markets.</p>
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="text-sm font-black text-yellow-600 uppercase tracking-[0.2em] mb-4">Investment Engine</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-slate-900">How Fidelity Operates</h3>
             </div>
-
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Step 1 -->
-                <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 group hover:border-yellow-500 transition-all" data-aos="fade-up">
-                    <div class="text-5xl font-black text-slate-100 mb-6 group-hover:text-yellow-100 transition-colors">01</div>
-                    <h4 class="text-xl font-bold mb-4">Deposit Capital</h4>
-                    <p class="text-slate-500 leading-relaxed">Create your free account and deposit your chosen amount. This capital is pooled into our loan disbursement fund.</p>
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div class="space-y-4" data-aos="fade-up">
+                    <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-yellow-500">
+                        <i data-lucide="wallet"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">1. Pool Capital</h4>
+                    <p class="text-slate-500">Investors deposit funds into the Wealth Scheme. These funds are pooled to create a massive lending liquidity reserve.</p>
                 </div>
-                <!-- Step 2 -->
-                <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 group hover:border-yellow-500 transition-all" data-aos="fade-up" data-aos-delay="100">
-                    <div class="text-5xl font-black text-slate-100 mb-6 group-hover:text-yellow-100 transition-colors">02</div>
-                    <h4 class="text-xl font-bold mb-4">Active Lending</h4>
-                    <p class="text-slate-500 leading-relaxed">Fidelity issues these funds as short-term, high-interest loans to verified businesses. We share the interest with you.</p>
+                <div class="space-y-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-yellow-500">
+                        <i data-lucide="landmark"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">2. Strategic Loans</h4>
+                    <p class="text-slate-500">Fidelity issues high-frequency micro-loans to verified global businesses at premium interest rates.</p>
                 </div>
-                <!-- Step 3 -->
-                <div class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 group hover:border-yellow-500 transition-all" data-aos="fade-up" data-aos-delay="200">
-                    <div class="text-5xl font-black text-slate-100 mb-6 group-hover:text-yellow-100 transition-colors">03</div>
-                    <h4 class="text-xl font-bold mb-4">2X Payout</h4>
-                    <p class="text-slate-500 leading-relaxed">Receive 10% daily ROI. Once your total balance hits 200% (double your deposit), you can withdraw the full amount.</p>
+                <div class="space-y-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-yellow-500">
+                        <i data-lucide="refresh-cw"></i>
+                    </div>
+                    <h4 class="text-xl font-bold">3. Shared Profits</h4>
+                    <p class="text-slate-500">Interest from loans is redistributed back to you at a rate of 10% daily until your capital is doubled.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- WITHDRAWAL RULE BANNER -->
-    <section class="py-16 bg-slate-900 overflow-hidden relative">
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <div class="inline-flex items-center bg-yellow-500/10 border border-yellow-500/20 px-4 py-2 rounded-full text-yellow-500 mb-8">
-                <i data-lucide="lock" class="w-4 h-4 mr-2"></i>
-                <span class="text-xs font-bold uppercase tracking-wider">Maturity Clause</span>
+    <!-- WITHDRAWAL SECTION -->
+    <section id="withdraw" class="py-24 bg-slate-50">
+        <div class="container mx-auto px-6 lg:flex items-center gap-16">
+            <div class="lg:w-1/2 mb-12 lg:mb-0" data-aos="fade-right">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-slate-900">The 2X Maturation Rule</h2>
+                <p class="text-slate-600 text-lg mb-8 leading-relaxed">
+                    To maintain the stability of our lending cycles, capital remains active in the market until it reaches the 200% threshold.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-start space-x-3">
+                        <i data-lucide="check-circle-2" class="text-green-500 w-6 h-6 shrink-0"></i>
+                        <span class="text-slate-700">Daily earnings are credited every 24 hours.</span>
+                    </li>
+                    <li class="flex items-start space-x-3">
+                        <i data-lucide="check-circle-2" class="text-green-500 w-6 h-6 shrink-0"></i>
+                        <span class="text-slate-700">Withdrawal window opens once balance hits 2x deposit.</span>
+                    </li>
+                    <li class="flex items-start space-x-3">
+                        <i data-lucide="check-circle-2" class="text-green-500 w-6 h-6 shrink-0"></i>
+                        <span class="text-slate-700">Zero withdrawal fees upon maturation.</span>
+                    </li>
+                </ul>
             </div>
-            <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Guaranteed 2X Maturation</h3>
-            <p class="text-slate-400 max-w-2xl mx-auto text-lg mb-10 leading-relaxed">
-                To ensure system stability and loan completion, withdrawals are activated immediately upon reaching your 2x goal. For example, a $10,000 deposit yields $1,000 daily for 20 days until $20,000 is reached.
-            </p>
-            <div class="flex justify-center">
-                <div class="w-full max-w-md bg-slate-800 rounded-2xl p-1 overflow-hidden">
-                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 65%"></div>
+            <div class="lg:w-1/2" data-aos="fade-left">
+                <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+                    <div class="mb-6">
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span>PROGRESS TO WITHDRAWAL</span>
+                            <span class="text-yellow-600">75%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden">
+                            <div class="bg-yellow-500 h-full w-[75%] transition-all duration-1000"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-xs text-slate-500 uppercase font-bold">Status</p>
+                            <p class="text-sm font-bold text-blue-600">In Progress</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-xs text-slate-500 uppercase font-bold">Lock Period Remaining</p>
+                            <p class="text-sm font-bold text-slate-900">3 Days</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <p class="text-slate-500 mt-4 text-sm font-medium">Automatic Disbursement at 100% Progress</p>
         </div>
     </section>
 
-    <!-- FAQ -->
-    <section id="faq" class="py-24 bg-white">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <h3 class="text-3xl font-bold text-center mb-16">Frequently Asked Questions</h3>
-            <div class="space-y-6">
-                <div class="border border-slate-200 rounded-2xl p-6 hover:bg-slate-50 transition-colors cursor-pointer">
-                    <h4 class="font-bold flex justify-between items-center">
-                        Is my initial deposit safe?
-                        <i data-lucide="plus" class="w-5 h-5 text-slate-400"></i>
-                    </h4>
-                    <p class="text-slate-500 mt-4 hidden">Yes, all deposits are used to fund collateralized loans, ensuring the security of the principal amount.</p>
+    <!-- TESTIMONIALS SLIDER -->
+    <section id="testimonials" class="py-24 bg-white overflow-hidden">
+        <div class="container mx-auto px-6">
+            <h3 class="text-3xl font-bold text-center mb-16">What Our Lenders Say</h3>
+            <div class="swiper testimonialSwiper pb-12">
+                <div class="swiper-wrapper">
+                    <!-- Slide 1 -->
+                    <div class="swiper-slide p-4">
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 max-w-lg mx-auto">
+                            <div class="flex space-x-1 text-yellow-500 mb-4">
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                            </div>
+                            <p class="text-slate-600 italic mb-6">"Fidelity Wealth is the most consistent platform I've used. I deposited $5,000 and exactly 20 days later I withdrew $10,000. Professional and reliable."</p>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-slate-300 rounded-full"></div>
+                                <div>
+                                    <h5 class="font-bold">Marcus Thorne</h5>
+                                    <p class="text-xs text-slate-400">Verified Investor</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="swiper-slide p-4">
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 max-w-lg mx-auto">
+                            <div class="flex space-x-1 text-yellow-500 mb-4">
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                            </div>
+                            <p class="text-slate-600 italic mb-6">"I was skeptical at first about the 10% daily, but the math behind the loan business makes sense. Already on my third cycle now!"</p>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-slate-300 rounded-full"></div>
+                                <div>
+                                    <h5 class="font-bold">Sarah Jenkins</h5>
+                                    <p class="text-xs text-slate-400">Business Owner</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="swiper-slide p-4">
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 max-w-lg mx-auto">
+                            <div class="flex space-x-1 text-yellow-500 mb-4">
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                                <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                            </div>
+                            <p class="text-slate-600 italic mb-6">"The dashboard is so clean and easy to use. No hidden fees, just straight-up earnings. Highly recommend to everyone."</p>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-slate-300 rounded-full"></div>
+                                <div>
+                                    <h5 class="font-bold">David Chen</h5>
+                                    <p class="text-xs text-slate-400">Retailer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="border border-slate-200 rounded-2xl p-6 hover:bg-slate-50 transition-colors cursor-pointer">
-                    <h4 class="font-bold flex justify-between items-center">
-                        Can I withdraw early?
-                        <i data-lucide="plus" class="w-5 h-5 text-slate-400"></i>
-                    </h4>
-                    <p class="text-slate-500 mt-4">Withdrawals are only permitted once the investment has reached its 2x (200%) target to maintain loan integrity.</p>
+                <div class="swiper-pagination mt-10"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="py-24 bg-slate-50">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <h3 class="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h3>
+            <div class="space-y-4">
+                <!-- FAQ 1 (Open by default) -->
+                <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button class="w-full flex justify-between items-center p-6 text-left font-bold text-slate-900 transition-colors">
+                        <span>How does Fidelity provide 10% daily?</span>
+                        <i data-lucide="chevron-down" class="faq-icon transition-transform duration-300 rotate-180"></i>
+                    </button>
+                    <div class="faq-content p-6 pt-0 text-slate-500">
+                        Our capital is used in the high-frequency micro-loan market, where short-term business loans generate significant interest yields daily. We pass 10% of that profit to our liquidity providers (you).
+                    </div>
                 </div>
-                <div class="border border-slate-200 rounded-2xl p-6 hover:bg-slate-50 transition-colors cursor-pointer">
-                    <h4 class="font-bold flex justify-between items-center">
-                        What is the minimum deposit?
-                        <i data-lucide="plus" class="w-5 h-5 text-slate-400"></i>
-                    </h4>
-                    <p class="text-slate-500 mt-4">The scheme is accessible to everyone. Contact support for current tier minimums.</p>
+                <!-- FAQ 2 -->
+                <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button class="w-full flex justify-between items-center p-6 text-left font-bold text-slate-900 transition-colors">
+                        <span>Is there a fee to create an account?</span>
+                        <i data-lucide="chevron-down" class="faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content p-6 pt-0 text-slate-500 hidden">
+                        No. Registration is completely free. You only need to deposit capital to start earning.
+                    </div>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="faq-item bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <button class="w-full flex justify-between items-center p-6 text-left font-bold text-slate-900 transition-colors">
+                        <span>Can I withdraw before the 2x limit?</span>
+                        <i data-lucide="chevron-down" class="faq-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content p-6 pt-0 text-slate-500 hidden">
+                        To protect the loan maturity period, withdrawals are only enabled once the system reaches your 200% profit goal.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="bg-slate-900 rounded-[3rem] p-8 lg:p-16 flex flex-col lg:flex-row gap-16 overflow-hidden relative">
+                <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-yellow-500/10 blur-[100px] rounded-full"></div>
+                <div class="lg:w-1/2 relative z-10" data-aos="fade-right">
+                    <h3 class="text-4xl font-bold text-white mb-6">Need Assistance?</h3>
+                    <p class="text-slate-400 mb-10 text-lg leading-relaxed">Our financial support team is available 24/7 to help you with your account, deposits, or technical questions.</p>
+                    <div class="space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-yellow-500"><i data-lucide="mail"></i></div>
+                            <div><p class="text-slate-400 text-xs">Email Support</p><p class="text-white font-bold">support@fidelitywealth.com</p></div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-yellow-500"><i data-lucide="map-pin"></i></div>
+                            <div><p class="text-slate-400 text-xs">Headquarters</p><p class="text-white font-bold">Financial District, New York, NY</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 relative z-10" data-aos="fade-left">
+                    <form class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Full Name" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-yellow-500 transition-colors">
+                            <input type="email" placeholder="Email Address" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-yellow-500 transition-colors">
+                        </div>
+                        <input type="text" placeholder="Subject" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-yellow-500 transition-colors">
+                        <textarea rows="4" placeholder="Your Message" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-yellow-500 transition-colors"></textarea>
+                        <button type="submit" class="btn-primary w-full py-4 rounded-xl font-bold uppercase tracking-widest text-slate-900">Send Message</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -271,38 +413,57 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- SCRIPTS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
-        // Initialize Icons
+        // Init Lucide
         lucide.createIcons();
         
-        // Initialize Animations
-        AOS.init({
-            duration: 800,
-            once: true,
-            easing: 'ease-out-quad'
+        // Init AOS
+        AOS.init({ duration: 800, once: true });
+
+        // MOBILE MENU TOGGLE
+        const openMenu = document.getElementById('openMenu');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        openMenu.addEventListener('click', () => mobileMenu.classList.add('active'));
+        closeMenu.addEventListener('click', () => mobileMenu.classList.remove('active'));
+        mobileLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('active')));
+
+        // TESTIMONIAL SWIPER
+        const swiper = new Swiper('.testimonialSwiper', {
+            loop: true,
+            autoplay: { delay: 4000 },
+            pagination: { el: '.swiper-pagination', clickable: true },
+            breakpoints: {
+                640: { slidesPerView: 1 },
+                1024: { slidesPerView: 2, spaceBetween: 30 }
+            }
         });
 
-        // Simple FAQ Toggle Logic
-        document.querySelectorAll('#faq h4').forEach(header => {
-            header.addEventListener('click', () => {
-                const p = header.nextElementSibling;
-                p.classList.toggle('hidden');
-                const icon = header.querySelector('i');
-                if(p.classList.contains('hidden')) {
-                    icon.setAttribute('data-lucide', 'plus');
-                } else {
-                    icon.setAttribute('data-lucide', 'minus');
+        // FAQ LOGIC
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const btn = item.querySelector('button');
+            const content = item.querySelector('.faq-content');
+            const icon = item.querySelector('.faq-icon');
+
+            btn.addEventListener('click', () => {
+                const isOpen = !content.classList.contains('hidden');
+                
+                // Close all
+                document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+                document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('rotate-180'));
+                
+                // Toggle clicked
+                if (!isOpen) {
+                    content.classList.remove('hidden');
+                    icon.classList.add('rotate-180');
                 }
-                lucide.createIcons();
             });
-        });
-
-        // Mobile Menu Logic
-        const menuBtn = document.getElementById('menuBtn');
-        menuBtn.addEventListener('click', () => {
-            alert('Mobile menu navigation triggered. In a production environment, this would open a full-screen overlay.');
         });
     </script>
 </body>
