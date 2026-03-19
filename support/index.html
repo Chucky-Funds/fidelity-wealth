@@ -20,26 +20,32 @@
         .gradient-dark { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
         .glass-header { background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(12px); }
         
+        /* FIX: Force cards to be visible and set correct stacking */
+        .support-card {
+            opacity: 1 !important;
+            visibility: visible !important;
+            z-index: 30;
+            position: relative;
+        }
+
         /* Captcha Box Styling */
         .captcha-box {
             font-family: 'Courier New', Courier, monospace;
-            background: #e2e8f0;
+            background: #cbd5e1;
             letter-spacing: 5px;
             user-select: none;
-            border: 2px solid #cbd5e1;
+            border: 2px solid #94a3b8;
+            color: #334155;
         }
 
         /* Success Overlay */
         #successOverlay {
             display: none;
             backdrop-filter: blur(8px);
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 100;
         }
         #successOverlay.active { display: flex; animation: fadeIn 0.4s ease; }
-
-        /* File Upload Styling */
-        #fileInputBox { transition: all 0.3s ease; }
-        #fileInputBox.dragover { border-color: #fbbf24; background: #fffbeb; }
 
         /* Chat Widget Styles */
         #chatWindow {
@@ -65,11 +71,17 @@
         /* Custom Scrollbar for Chat */
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 10px; }
 
+        /* Responsive spacing for mobile */
+        @media (max-width: 640px) {
+            .hero-text { font-size: 2.25rem !important; }
+            .negative-gap { margin-top: -4rem !important; }
+            .card-grid { gap: 1rem !important; }
+        }
         @media (max-width: 320px) {
-            h1 { font-size: 1.5rem !important; }
-            .btn-text { display: none; }
+            .hero-text { font-size: 1.75rem !important; }
+            .card-padding { padding: 1.5rem !important; }
         }
     </style>
 </head>
@@ -84,56 +96,45 @@
                 </div>
                 <span class="text-white font-bold text-lg tracking-tight uppercase">Fidelity <span class="text-yellow-500">Wealth</span></span>
             </div>
-            <a href="index.html" class="bg-yellow-500 hover:bg-yellow-600 text-slate-950 px-5 py-2 rounded-full text-xs font-black transition-all">
+            <a href="../index.html" class="bg-yellow-500 hover:bg-yellow-600 text-slate-950 px-5 py-2 rounded-full text-xs font-black transition-all tracking-widest">
                 EXIT HUB
             </a>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
-    <header class="gradient-dark pt-40 pb-32 relative text-center">
+    <header class="gradient-dark pt-40 pb-48 relative text-center">
         <div class="container mx-auto px-6">
-            <h1 class="gsap-hero text-4xl md:text-6xl font-black text-white mb-6">How can we assist your <span class="text-yellow-500 underline decoration-4 underline-offset-8">growth?</span></h1>
+            <h1 class="gsap-hero hero-text text-4xl md:text-6xl font-black text-white mb-6">How can we assist your <span class="text-yellow-500 underline decoration-4 underline-offset-8">growth?</span></h1>
             <p class="gsap-hero text-slate-400 max-w-2xl mx-auto text-lg">Our financial support specialists are available around the clock to manage your lending inquiries and account security.</p>
         </div>
     </header>
 
     <!-- MAIN CONTENT -->
-    <main class="container mx-auto px-6 -mt-16 pb-20 relative z-10">
+    <main class="container mx-auto px-6 negative-gap -mt-24 pb-20 relative z-20">
         
-        <!-- CONTACT CARDS (Top Structure) -->
-        <div class="grid md:grid-cols-3 gap-6 mb-12">
-            <!-- WhatsApp -->
-            <div class="gsap-card bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group">
-                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i data-lucide="message-circle"></i>
-                </div>
-                <h3 class="font-bold text-lg mb-2">WhatsApp Direct</h3>
-                <p class="text-slate-500 text-sm mb-4">Fastest channel for verification and deposit issues.</p>
-                <a href="https://wa.me/16314285542" class="text-yellow-600 font-bold text-sm flex items-center">
-                    CHAT NOW <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
-                </a>
-            </div>
+        <!-- CONTACT CARDS (Corrected Layout) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 card-grid">
             <!-- Email -->
-            <div class="gsap-card bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i data-lucide="mail"></i>
+            <div class="support-card bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl flex flex-col items-center text-center group transition-all hover:-translate-y-2">
+                <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                    <i data-lucide="mail" class="w-8 h-8"></i>
                 </div>
-                <h3 class="font-bold text-lg mb-2">Official Email</h3>
-                <p class="text-slate-500 text-sm mb-4">For institutional partnerships or complex inquiries.</p>
-                <a href="mailto:fidelitywealth9@gmail.com" class="text-yellow-600 font-bold text-sm flex items-center">
-                    fidelitywealth9@gmail.com
-                </a>
+                <h3 class="font-bold text-xl mb-2 text-slate-900">Email Support</h3>
+                <p class="text-slate-500 text-sm mb-6 leading-relaxed">For institutional partnerships and cycle inquiries.</p>
+                <p class="text-slate-500 text-sm mb-6 leading-relaxed">fidelitywealth9@gmail.com</p>
+                <a href="mailto:fidelitywealth9@gmail.com" class="w-full bg-slate-100 text-slate-900 py-3 rounded-xl font-bold text-xs tracking-widest hover:bg-yellow-500 transition-colors uppercase">Send Email</a>
             </div>
+
             <!-- Hours -->
-            <div class="gsap-card bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all group">
-                <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <i data-lucide="clock"></i>
+            <div class="support-card bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl flex flex-col items-center text-center group transition-all hover:-translate-y-2">
+                <div class="w-14 h-14 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center mb-6">
+                    <i data-lucide="clock" class="w-8 h-8"></i>
                 </div>
-                <h3 class="font-bold text-lg mb-2">Operating Hours</h3>
-                <p class="text-slate-500 text-sm mb-1">Mon - Fri: 24 Hours</p>
-                <p class="text-slate-500 text-sm mb-4">Sat - Sun: 10:00 AM - 4:00 PM</p>
-                <div class="flex items-center text-[10px] font-black text-green-500 uppercase tracking-widest">
+                <h3 class="font-bold text-xl mb-2 text-slate-900">Live Status</h3>
+                <p class="text-slate-500 text-sm mb-1 leading-relaxed">Mon - Fri: 24 Hours</p>
+                <p class="text-slate-500 text-sm mb-6 leading-relaxed">Sat - Sun: 10am - 4pm</p>
+                <div class="flex items-center text-[10px] font-black text-green-500 uppercase tracking-widest bg-green-50 px-4 py-1 rounded-full">
                     <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2"></span> System Online
                 </div>
             </div>
@@ -141,25 +142,25 @@
 
         <!-- TICKET FORM (Central Vault Structure) -->
         <div class="max-w-4xl mx-auto relative gsap-form">
-            <div class="bg-white rounded-[2.5rem] p-8 md:p-16 shadow-2xl border border-slate-100 relative overflow-hidden">
+            <div class="bg-white rounded-[2.5rem] card-padding p-8 md:p-16 shadow-2xl border border-slate-100 relative overflow-hidden">
                 
                 <!-- SUCCESS OVERLAY (Ported Feature) -->
-                <div id="successOverlay" class="absolute inset-0 z-50 flex-col items-center justify-center text-center p-6">
+                <div id="successOverlay" class="absolute inset-0 z-50 flex flex-col items-center justify-center text-center p-6">
                     <div class="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center mb-6 shadow-lg shadow-green-200">
                         <i data-lucide="check" class="w-10 h-10"></i>
                     </div>
-                    <h2 class="text-3xl font-black mb-2">Ticket Dispatched</h2>
-                    <p class="text-slate-500 mb-8 max-w-sm">Reference ID: #FW-${Math.floor(Math.random()*90000)}<br>A manager will contact you shortly.</p>
-                    <button onclick="resetTicketForm()" class="bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-slate-800 transition-all">Submit New Request</button>
+                    <h2 class="text-3xl font-black mb-2 text-slate-900">Ticket Sent</h2>
+                    <p class="text-slate-500 mb-8 max-w-sm">Reference ID: #FW-X${Math.floor(Math.random()*9999)}<br>Fidelity support will respond via email shortly.</p>
+                    <button onclick="location.reload()" class="bg-slate-900 text-white px-10 py-3 rounded-full font-bold hover:bg-slate-800 transition-all">Submit New Ticket</button>
                 </div>
 
-                <div class="mb-10 text-center">
-                    <h2 class="text-3xl font-black text-slate-900">Submit Institutional Ticket</h2>
-                    <p class="text-slate-500 mt-2">Required for all account-level modifications.</p>
+                <div class="mb-10 text-center md:text-left">
+                    <h2 class="text-3xl font-black text-slate-900">Submit Support Ticket</h2>
+                    <p class="text-slate-500 mt-2">Official communication channel for active lenders.</p>
                 </div>
 
                 <form id="fidelityTicketForm" class="space-y-6">
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-xs font-black uppercase tracking-widest text-slate-400">Legal Full Name</label>
                             <input type="text" required class="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl outline-none focus:border-yellow-500 transition-all" placeholder="John Doe">
@@ -199,17 +200,17 @@
                     </div>
 
                     <!-- CAPTCHA (Ported Feature) -->
-                    <div class="flex flex-col md:flex-row items-center gap-4 bg-slate-900 p-6 rounded-2xl">
+                    <div class="flex flex-col md:flex-row items-center gap-4 bg-slate-900 p-6 rounded-[1.5rem]">
                         <div class="flex-1 w-full">
-                            <input type="text" id="captchaInput" placeholder="Enter Security Code" class="w-full bg-white/10 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-yellow-500 text-sm">
+                            <input type="text" id="captchaInput" placeholder="Type Security Code" class="w-full bg-white/10 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-yellow-500 text-sm">
                         </div>
-                        <div id="captchaDisplay" class="captcha-box px-8 py-4 rounded-xl font-black text-xl text-slate-700 italic">
+                        <div id="captchaDisplay" class="captcha-box flex-1 w-full p-4 rounded-xl text-center font-black text-xl text-slate-600 uppercase">
                             <!-- Code via JS -->
                         </div>
                     </div>
 
-                    <button type="submit" id="submitTicketBtn" disabled class="w-full bg-yellow-500 text-slate-950 py-5 rounded-2xl font-black uppercase tracking-widest transition-all opacity-50 cursor-not-allowed flex items-center justify-center space-x-2">
-                        <span>Initiate Support Ticket</span>
+                    <button type="submit" id="submitTicketBtn" disabled class="w-full bg-yellow-500 text-slate-950 py-5 rounded-2xl font-black uppercase tracking-widest transition-all opacity-50 cursor-not-allowed flex items-center justify-center space-x-2 hover:bg-yellow-400">
+                        <span>Dispatch Support Ticket</span>
                         <i data-lucide="send" class="w-5 h-5"></i>
                     </button>
                 </form>
@@ -223,7 +224,7 @@
         <i data-lucide="bot" class="relative z-10 w-8 h-8"></i>
     </div>
 
-    <div id="chatWindow" class="fixed bottom-28 right-8 w-[350px] md:w-[400px] h-[550px] bg-white rounded-[2rem] shadow-2xl border border-slate-200 z-[200] flex flex-col overflow-hidden">
+    <div id="chatWindow" class="fixed bottom-28 right-8 w-[90%] sm:w-[400px] h-[550px] bg-white rounded-[2.5rem] shadow-2xl border border-slate-200 z-[200] flex flex-col overflow-hidden">
         <!-- Chat Header -->
         <div class="bg-slate-900 p-6 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -232,7 +233,7 @@
                 </div>
                 <div>
                     <h4 class="text-white font-bold text-sm">Fidelity AI</h4>
-                    <p class="text-[10px] text-green-400 font-black uppercase tracking-widest">Active Specialist</p>
+                    <p class="text-[10px] text-green-400 font-black uppercase tracking-widest">Specialist Online</p>
                 </div>
             </div>
             <button id="closeChat" class="text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
@@ -259,10 +260,23 @@
         lucide.createIcons();
 
         // ----------------------------------------------------
-        // GSAP ANIMATIONS
+        // GSAP FIX: fromTo ensures cards stay visible
         // ----------------------------------------------------
         gsap.from(".gsap-hero", { y: 50, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out" });
-        gsap.from(".gsap-card", { y: 30, opacity: 0, duration: 0.8, stagger: 0.15, delay: 0.5, ease: "back.out(1.7)" });
+        
+        gsap.fromTo(".support-card", 
+            { y: 60, opacity: 0 }, 
+            { 
+                y: 0, 
+                opacity: 1, 
+                duration: 0.8, 
+                stagger: 0.15, 
+                delay: 0.4, 
+                ease: "power2.out",
+                clearProps: "all" 
+            }
+        );
+
         gsap.from(".gsap-form", { y: 100, opacity: 0, duration: 1, delay: 0.8, ease: "power4.out" });
 
         // ----------------------------------------------------
@@ -277,7 +291,7 @@
         const successOverlay = document.getElementById('successOverlay');
 
         // Captcha Engine
-        const codes = ["FID98", "WAL77", "SEC44", "LEND1", "GOLD9", "ROI20"];
+        const codes = ["SEC77", "FID10", "ROI2X", "CAP99", "GOLD1"];
         let currentCode = codes[Math.floor(Math.random()*codes.length)];
         captchaDisplay.innerText = currentCode;
 
@@ -294,7 +308,7 @@
         // File Handler
         fileInput.addEventListener('change', (e) => {
             if(e.target.files.length > 0) {
-                fileStatus.innerText = "Target: " + e.target.files[0].name;
+                fileStatus.innerText = "Selected: " + e.target.files[0].name;
                 fileStatus.style.color = "#10b981";
             }
         });
@@ -302,26 +316,13 @@
         // Form Submit
         ticketForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            submitBtn.innerHTML = `<i data-lucide="loader-2" class="animate-spin w-5 h-5 mr-2"></i> Processing...`;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="animate-spin w-5 h-5 mr-2"></i> PROCESSING...`;
             lucide.createIcons();
             
             setTimeout(() => {
                 successOverlay.classList.add('active');
-            }, 2000);
+            }, 1800);
         });
-
-        function resetTicketForm() {
-            successOverlay.classList.remove('active');
-            ticketForm.reset();
-            fileStatus.innerText = "Attach JPG or PNG (Max 5MB)";
-            fileStatus.style.color = "";
-            submitBtn.innerHTML = `<span>Initiate Support Ticket</span><i data-lucide="send" class="w-5 h-5"></i>`;
-            submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            currentCode = codes[Math.floor(Math.random()*codes.length)];
-            captchaDisplay.innerText = currentCode;
-            lucide.createIcons();
-        }
 
         // ----------------------------------------------------
         // AI CHATBOT LOGIC
@@ -338,14 +339,12 @@
         closeChat.addEventListener('click', () => chatWindow.classList.remove('open'));
 
         const botDB = {
-            "withdraw": "Maturation occurs at 200%. Once reached, the payout window unlocks automatically for institutional ACH transfer.",
-            "maturation": "A full cycle takes 20 days. You receive 10% daily ROI until the 2X threshold is met.",
-            "deposit": "Funds are pooled into our collateralized enterprise lending reserve. Minimums depend on active tier availability.",
-            "roi": "We offer a fixed 10% daily return based on real-world commercial interest from verified SMEs.",
-            "scam": "Fidelity Wealth Scheme is a debt-market platform. We do not rely on referrals; revenue is generated via commercial loans.",
-            "hello": "Greetings. How can Fidelity AI assist your wealth generation today?",
-            "hi": "Hello. I am online and ready to help with cycle verification or deposit queries.",
-            "thanks": "You are welcome. Your capital security is our priority.",
+            "withdraw": "Maturation occurs at 200%. After 20 days, the payout window unlocks automatically for institutional ACH transfer.",
+            "maturation": "A full cycle takes exactly 20 days. You receive 10% daily ROI until the 2X threshold is met.",
+            "deposit": "Capital is pooled into our enterprise lending reserve. Minimums depend on tier availability.",
+            "roi": "We offer a fixed 10% daily return generated through commercial interest from verified SME loans.",
+            "hello": "Greetings. How can Fidelity AI facilitate your wealth generation today?",
+            "hi": "Hello. I am online and ready to assist with cycle verification or deposit queries.",
             "help": "I can assist with: Maturation timers, Withdrawal protocols, Security settings, and Deposit verification."
         };
 
@@ -365,19 +364,13 @@
             
             setTimeout(() => {
                 typingIndicator.classList.add('hidden');
-                let response = "I did not recognize those parameters. Please inquire about 'Maturation', 'Withdrawals', or 'Deposits'.";
+                let response = "Parameters not recognized. Please inquire about 'Maturation', 'Withdrawals', or 'Deposits'.";
                 
                 for(let key in botDB) {
                     if(lowInput.includes(key)) { response = botDB[key]; break; }
                 }
-
-                // Gibberish Check
-                if(lowInput.length > 8 && !lowInput.includes(" ") && !/[aeiouy]/i.test(lowInput)) {
-                    response = "System analysis failed: Input appears encrypted or non-standard. Please use standard English.";
-                }
-
                 addChatMessage(response, 'bot');
-            }, 1500);
+            }, 1200);
         }
 
         function handleSend() {
