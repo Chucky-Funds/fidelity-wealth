@@ -328,12 +328,81 @@
 </div>
 
         <!-- INVESTMENTS TAB -->
-        <div id="tab-investments" class="tab-content hidden">
-            <h3 class="text-2xl font-black mb-6">My Investment Portfolio</h3>
-            <div id="investments-list" class="grid md:grid-cols-2 gap-6">
-                <!-- Investment cards injected by JS -->
+        <!-- ADVANCED INVESTMENTS TAB -->
+<!-- ADVANCED INVESTMENTS TAB -->
+<div id="tab-investments" class="tab-content hidden">
+    
+    <!-- HEADER: Title on Left, Button on Right -->
+    <div class="flex items-center justify-between mb-10 w-full">
+        <h3 class="text-xl md:text-2xl font-black">My Investment Portfolio</h3>
+        
+        <!-- Action Button (Pinned Right) -->
+        <button onclick="triggerDeposit()" class="bg-primary hover:bg-yellow-500 text-slate-900 px-5 py-3 md:px-7 md:py-4 rounded-2xl font-black flex items-center transition-all active:scale-95 shadow-lg shadow-primary/20 uppercase text-[10px] md:text-xs tracking-widest whitespace-nowrap">
+            <i data-lucide="plus-circle" class="mr-2 w-4 h-4"></i> Create New Investment
+        </button>
+    </div>
+
+    <!-- STATIONARY EXAMPLE (Always Visible for Reference) -->
+    <div class="mb-10">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 ml-4">Portfolio</p>
+        
+        <div class="bg-white dark:bg-darkCard border-2 border-primary/30 rounded-[2.5rem] overflow-hidden shadow-xl">
+            <!-- Header (Clickable) -->
+            <div onclick="toggleDetails('example')" class="p-6 md:p-8 flex items-center justify-between cursor-pointer bg-primary/5">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-primary text-slate-900 flex items-center justify-center">
+                        <i data-lucide="award" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-black text-lg">₦50,000.00</h4>
+                        <p class="text-[10px] font-bold text-primary uppercase tracking-widest">Example Portfolio</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="px-3 py-1 rounded-full text-[10px] font-black bg-green-500 text-white uppercase">ACTIVE</span>
+                    <i data-lucide="chevron-down" id="chevron-example" class="w-5 h-5 text-primary transition-transform"></i>
+                </div>
+            </div>
+
+            <!-- Breakdown (Visible Example) -->
+            <!-- ADD 'hidden' TO THIS LINE -->
+            <div id="details-example" class="hidden p-6 md:p-8 border-t border-slate-100 dark:border-slate-800">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                     <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Daily 10% ROI</p>
+                        <p class="font-black text-lg text-green-500">₦5,000.00</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Total Earned</p>
+                        <p class="font-black text-lg">₦35,000.00</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Days Elapsed</p>
+                        <p class="font-black text-lg">7 / 20 Days</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Target Payout</p>
+                        <p class="font-black text-lg text-primary">₦100,000.00</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between items-end">
+                        <span class="text-[10px] font-black text-slate-400 uppercase">Cycle Progress</span>
+                        <span class="text-xl font-black text-primary">35%</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div class="h-full bg-primary" style="width: 35%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold text-slate-500">
+                        <p>Remaining: ₦65,000.00</p>
+                        <p>13 Days Left</p>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+</div>
 
         <!-- TRANSACTIONS TAB -->
         <div id="tab-transactions" class="tab-content hidden">
@@ -870,21 +939,100 @@ startPayoutTimer();
         }
 
         // --- 2. UPDATED RENDER FUNCTION (Add this inside your current render()) ---
+        // --- UPDATED RENDER ENGINE ---
         function render() {
-            // ... (keep previous balance/stats logic) ...
+            // ... (keep your balance and stats logic) ...
 
-            // Update Profile Elements
+            // --- RENDER DYNAMIC INVESTMENT LIST ---
+            const invContainer = document.getElementById('investments-list');
+            
+            if (state.investments.length === 0) {
+                invContainer.innerHTML = `
+                    <div class="text-center py-10 bg-slate-100/50 dark:bg-slate-900/50 rounded-[2rem] border-2 border-dashed border-slate-200 dark:border-slate-800">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">No active user investments found</p>
+                    </div>
+                `;
+            } else {
+                invContainer.innerHTML = state.investments.map((inv, index) => {
+                    const dailyROI = inv.amount * 0.10;
+                    const daysElapsed = Math.floor(inv.earned / dailyROI);
+                    const daysRemaining = 20 - daysElapsed;
+                    const progress = (inv.earned / (inv.amount * 2)) * 100;
+
+                    return `
+                    <div class="bg-white dark:bg-darkCard border border-slate-100 dark:border-slate-800 rounded-[2rem] overflow-hidden shadow-sm">
+                        <div onclick="toggleDetails(${index})" class="p-6 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                    <i data-lucide="trending-up" class="w-5 h-5 text-slate-400"></i>
+                                </div>
+                                <h4 class="font-black">₦${inv.amount.toLocaleString()}</h4>
+                            </div>
+                            <i data-lucide="chevron-down" id="chevron-${index}" class="w-5 h-5 text-slate-300 transition-transform"></i>
+                        </div>
+
+                        <div id="details-${index}" class="hidden p-6 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/10">
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div><p class="text-[9px] font-bold text-slate-400 uppercase">Daily</p><p class="text-sm font-black text-green-500">₦${dailyROI.toLocaleString()}</p></div>
+                                <div><p class="text-[9px] font-bold text-slate-400 uppercase">Earned</p><p class="text-sm font-black">₦${inv.earned.toLocaleString()}</p></div>
+                                <div><p class="text-[9px] font-bold text-slate-400 uppercase">Remaining</p><p class="text-sm font-black text-primary">₦${((inv.amount*2)-inv.earned).toLocaleString()}</p></div>
+                                <div><p class="text-[9px] font-bold text-slate-400 uppercase">Days Left</p><p class="text-sm font-black">${daysRemaining} Days</p></div>
+                            </div>
+                            <div class="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+            }
+            lucide.createIcons();
+        }
+
+        // --- ACCORDION TOGGLE (Handles both stationary and dynamic) ---
+        function toggleDetails(id) {
+            const content = document.getElementById(`details-${id}`);
+            const chevron = document.getElementById(`chevron-${id}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+            // Sync Profile Info
             document.getElementById('profile-name-header').innerText = state.user.name;
             document.getElementById('profile-email-header').innerText = state.user.email;
             document.getElementById('edit-name').value = state.user.name;
             document.getElementById('edit-email').value = state.user.email;
-
-            // Update Initials Circle
             const names = state.user.name.split(' ');
             const initials = names.length > 1 ? (names[0][0] + names[1][0]) : names[0][0];
             document.getElementById('profile-initials').innerText = initials.toUpperCase().substring(0,2);
 
             lucide.createIcons();
+
+
+        // --- ACCORDION TOGGLE FUNCTION ---
+        function toggleDetails(index) {
+            const content = document.getElementById(`details-${index}`);
+            const chevron = document.getElementById(`chevron-${index}`);
+            
+            const isHidden = content.classList.contains('hidden');
+            
+            // Optional: Close other accordions first
+            // document.querySelectorAll('[id^="details-"]').forEach(el => el.classList.add('hidden'));
+            // document.querySelectorAll('[id^="chevron-"]').forEach(el => el.classList.remove('rotate-180'));
+
+            if (isHidden) {
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
         }
 
         // --- 3. HELPER FUNCTIONS ---
