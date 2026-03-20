@@ -574,11 +574,15 @@
         // --- 1. CORE STATE ---
         let state = JSON.parse(localStorage.getItem('fw_state')) || {
     user: { 
-        name: "John Doe", // Update this here
+        name: "John Doe", 
         email: "john.doe@fidelity.com", 
         balance: 0 
     },
-    // ... rest of state
+    investments: [],
+    transactions: [],
+    settings: {
+        darkMode: true
+    }
 };
 
         function save() {
