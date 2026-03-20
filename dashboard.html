@@ -431,30 +431,66 @@
         </div>
 
         <!-- WITHDRAW TAB -->
-        <div id="tab-withdraw" class="tab-content hidden">
-            <div class="max-w-xl mx-auto">
-                <div class="bg-white dark:bg-darkCard p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800">
-                    <h3 class="text-2xl font-black mb-2 text-center">Withdraw Funds</h3>
-                    <p class="text-center text-slate-500 text-sm mb-8">Withdrawal available once ROI hits 200% per cycle</p>
-                    
-                    <form onsubmit="handleWithdrawal(event)" class="space-y-4">
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Bank Name</label>
-                            <input type="text" placeholder="Access Bank" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary" required>
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Account Number</label>
-                            <input type="text" placeholder="0123456789" maxlength="10" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary" required>
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase ml-2">Amount (₦)</label>
-                            <input type="number" id="withdraw-amount" placeholder="Minimum ₦1,000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary" required>
-                        </div>
-                        <button type="submit" class="w-full bg-primary text-slate-900 font-black py-4 rounded-2xl shadow-xl shadow-primary/20 mt-4 uppercase tracking-widest text-sm">Request Withdrawal</button>
-                    </form>
+        <!-- ADVANCED SPECIFIC WITHDRAWAL TAB -->
+<!-- ADVANCED SPECIFIC WITHDRAWAL TAB -->
+<div id="tab-withdraw" class="tab-content hidden">
+    <div class="max-w-2xl mx-auto space-y-8">
+        
+        <div class="text-center">
+            <h3 class="text-3xl font-black text-slate-700 dark:text-white mb-2">Payout Portal</h3>
+            <p class="text-sm text-slate-500">Select a matured investment cycle to unlock the form</p>
+        </div>
+
+        <form onsubmit="handleWithdrawal(event)" class="space-y-6">
+            
+            <!-- SECTION A: SELECTION -->
+            <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm">
+                <h4 class="font-black text-sm uppercase tracking-widest text-primary mb-6 flex items-center">
+                    <i data-lucide="list-checks" class="mr-2 w-4 h-4"></i> 1. Select Matured Funds
+                </h4>
+                
+                <!-- We add 'onchange' to detect clicks inside this list -->
+                <div id="matured-list" class="space-y-3" onchange="toggleWithdrawForm()">
+                    <!-- JS will inject Radio buttons here -->
                 </div>
             </div>
-        </div>
+
+            <!-- SECTION B: BANKING DETAILS (LOCKED BY DEFAULT) -->
+            <div id="banking-section" class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm opacity-40 cursor-not-allowed transition-all duration-500">
+                <h4 class="font-black text-sm uppercase tracking-widest text-primary mb-6 flex items-center">
+                    <i data-lucide="landmark" class="mr-2 w-4 h-4"></i> 2. Destination Account
+                </h4>
+
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Account Full Name</label>
+                        <input type="text" id="withdraw-acc-name" disabled placeholder="Account Holder Name" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary text-sm font-bold disabled:cursor-not-allowed" required>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Full Bank Name</label>
+                            <input type="text" id="withdraw-bank-name" disabled placeholder="e.g., First Bank PLC, United Bank of Africa" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary text-sm font-bold disabled:cursor-not-allowed" required>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Account Number</label>
+                            <input type="text" id="withdraw-acc-num" disabled placeholder="10-digit NUBAN" maxlength="10" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary text-sm font-bold disabled:cursor-not-allowed" required>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Amount to Withdraw (₦)</label>
+                        <input type="number" id="withdraw-amount" disabled placeholder="Enter amount" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary text-xl font-black disabled:cursor-not-allowed" required>
+                    </div>
+                </div>
+
+                <button type="submit" id="withdraw-submit-btn" disabled class="w-full bg-primary hover:bg-yellow-500 text-slate-900 font-black py-5 rounded-[2rem] shadow-xl shadow-primary/20 mt-8 uppercase tracking-widest text-xs transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Authorize Payout Request
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
         <!-- PROFILE TAB -->
         <!-- THE PROFILE HUB (PROFILE + SUPPORT + SETTINGS) -->
@@ -637,44 +673,7 @@
         </div>
 
         <!-- SUPPORT TAB -->
-        <div id="tab-support" class="tab-content hidden">
-            <div class="max-w-3xl mx-auto space-y-8">
-                <div class="text-center">
-                    <h3 class="text-3xl font-black mb-2">Help Center</h3>
-                    <p class="text-slate-500">Our agents are online 24/7 to assist you</p>
-                </div>
-
-                <!-- FAQ -->
-                <div class="grid gap-4">
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
-                        <h4 class="font-bold flex items-center mb-2"><i data-lucide="help-circle" class="mr-2 text-primary w-4 h-4"></i> When do I receive earnings?</h4>
-                        <p class="text-sm text-slate-500">Earnings are credited every 24 hours automatically into your balance starting exactly one day after your deposit.</p>
-                    </div>
-                    <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
-                        <h4 class="font-bold flex items-center mb-2"><i data-lucide="help-circle" class="mr-2 text-primary w-4 h-4"></i> What is the minimum withdrawal?</h4>
-                        <p class="text-sm text-slate-500">The minimum amount you can withdraw is ₦1,000, provided your investment cycle has generated profit.</p>
-                    </div>
-                </div>
-
-                <!-- CONTACT FORM -->
-                <div class="bg-white dark:bg-darkCard p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800">
-                    <h4 class="text-xl font-black mb-6">Open a Support Ticket</h4>
-                    <form onsubmit="handleSupportSubmit(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" placeholder="Subject" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary" required>
-                            <select class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary">
-                                <option>Deposit Issue</option>
-                                <option>Withdrawal Delayed</option>
-                                <option>Account Verification</option>
-                                <option>General Inquiry</option>
-                            </select>
-                        </div>
-                        <textarea rows="4" placeholder="Describe your issue in detail..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl outline-none focus:border-primary" required></textarea>
-                        <button type="submit" class="w-full bg-primary text-slate-900 font-black py-4 rounded-2xl shadow-xl shadow-primary/20 uppercase tracking-widest text-sm">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        
     </main>
 
     <!-- JS ENGINE -->
@@ -1169,6 +1168,109 @@ startPayoutTimer();
 
             lucide.createIcons();
         }
+        // --- 1. RENDER WITHDRAWAL RADIOS (Add this into your existing render function) ---
+        function render() {
+            // ... (previous balance/investments logic) ...
+
+            const maturedContainer = document.getElementById('matured-list');
+            const maturedInvestments = state.investments.filter(i => i.status === 'Completed');
+
+            if (maturedInvestments.length > 0) {
+                maturedContainer.innerHTML = maturedInvestments.map((inv, idx) => `
+                    <label class="relative flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-3xl cursor-pointer hover:border-primary transition-all group">
+                        <div class="flex items-center space-x-4">
+                            <input type="radio" name="selected_investment" value="${inv.id}" data-max="${inv.earned}" class="w-4 h-4 text-primary bg-slate-100 border-slate-300 focus:ring-primary" required>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase">Matured Portfolio</p>
+                                <p class="text-sm font-black text-slate-700 dark:text-white">₦${inv.amount.toLocaleString()} (Paid ₦${inv.earned.toLocaleString()})</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-black text-green-500 bg-green-500/10 px-3 py-1 rounded-full uppercase">Ready</span>
+                    </label>
+                `).join('');
+            } else {
+                maturedContainer.innerHTML = `
+                    <div class="text-center py-6 text-slate-400 border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-3xl">
+                        <p class="text-xs font-bold uppercase tracking-widest">No Matured Portfolios Found</p>
+                        <p class="text-[10px] mt-1">Investments must reach 200% ROI before withdrawal opens.</p>
+                    </div>
+                `;
+            }
+
+            lucide.createIcons();
+        }
+
+        // --- 2. UPDATED WITHDRAWAL HANDLER ---
+        function handleWithdrawal(e) {
+            e.preventDefault();
+            
+            // Get inputs
+            const selectedRadio = document.querySelector('input[name="selected_investment"]:checked');
+            const amountInput = document.getElementById('withdraw-amount');
+            const amt = parseFloat(amountInput.value);
+            
+            // Validation
+            if (!selectedRadio) {
+                alert("Please select a matured investment to withdraw from.");
+                return;
+            }
+
+            const invId = selectedRadio.value;
+            const maxAvailable = parseFloat(selectedRadio.dataset.max);
+
+            if (amt > maxAvailable) {
+                alert(`Insufficient funds in this portfolio! Max available: ₦${maxAvailable.toLocaleString()}`);
+                return;
+            }
+
+            // Execute Withdrawal
+            // Find the investment in state
+            const targetInv = state.investments.find(i => i.id == invId);
+            
+            // Subtract from the specific investment and user global balance
+            targetInv.earned -= amt;
+            state.user.balance -= amt;
+
+            // Log Transaction
+            state.transactions.unshift({
+                type: 'Withdraw',
+                amount: amt,
+                date: new Date().toLocaleDateString(),
+                status: 'Pending'
+            });
+
+            // ... rest of your code ...
+    save(); 
+    alert("Success! Your payout request has been queued.");
+    e.target.reset();
+    
+    // RE-LOCK THE FORM AFTER RESET
+    toggleWithdrawForm(); 
+}
+        function toggleWithdrawForm() {
+    // 1. Check if any matured investment radio is checked
+    const selectedRadio = document.querySelector('input[name="selected_investment"]:checked');
+    const bankingSection = document.getElementById('banking-section');
+    
+    // 2. Find all inputs and buttons inside the banking section
+    const inputs = bankingSection.querySelectorAll('input, button');
+
+    if (selectedRadio) {
+        // UNLOCK THE FORM
+        bankingSection.classList.remove('opacity-40', 'cursor-not-allowed');
+        bankingSection.classList.add('opacity-100');
+        inputs.forEach(input => {
+            input.disabled = false;
+        });
+    } else {
+        // LOCK THE FORM
+        bankingSection.classList.add('opacity-40', 'cursor-not-allowed');
+        bankingSection.classList.remove('opacity-100');
+        inputs.forEach(input => {
+            input.disabled = true;
+        });
+    }
+}
     </script>
 </body>
 </html>
