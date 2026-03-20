@@ -24,7 +24,7 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease; }
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease; overflow-x: hidden;}
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .active-tab { color: #fbbf24 !important; border-top: 2px solid #fbbf24; }
@@ -34,7 +34,7 @@
         header{border-bottom-width: 2px; border-bottom-color: #fbbf24; padding-bottom: 20px;}
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-darkBg text-slate-900 dark:text-white min-h-screen pb-24 lg:pb-0 lg:pl-64">
+<body class="bg-slate-50 dark:bg-darkBg text-slate-900 dark:text-white min-h-screen pb-24 lg:pb-0 lg:pl-64 overflow-x-hidden">
 
     <!-- DESKTOP SIDEBAR -->
 <!-- UPDATED DESKTOP SIDEBAR -->
@@ -151,7 +151,7 @@
     </nav>
 
     <!-- MAIN CONTENT AREA -->
-    <main class="p-4 md:p-8 max-w-7xl mx-auto">
+     <main class="p-4 md:p-8 max-w-7xl mx-auto w-full min-w-0">
         
         <!-- HEADER -->
         <!-- UPDATED PREMIUM HEADER -->
@@ -270,61 +270,65 @@
     </div>
 
     <!-- MAIN CONTENT GRID -->
-    <div class="grid lg:grid-cols-3 gap-8">
+    <!-- MAIN CONTENT GRID (FIXED FOR MOBILE WIDTH) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-full overflow-x-hidden">
+    
+    <!-- LEFT: ACTIVE PLANS & CHART (Added min-w-0 to prevent grid blowout) -->
+    <div class="lg:col-span-2 space-y-8 w-full min-w-0 overflow-x-hidden">
         
-        <!-- LEFT: ACTIVE PLANS & CHART -->
-        <div class="lg:col-span-2 space-y-8">
-            
-            <!-- CURRENT PROGRESS TRACKER (Relevant Content) -->
-            <div class="bg-white dark:bg-darkCard p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-black text-lg">Active Plan Progress</h3>
-                    <button onclick="showTab('investments')" class="text-xs font-bold text-primary">View Portfolio</button>
-                </div>
-                <div id="home-active-plans" class="space-y-6">
-                    <!-- Sample Progress if empty -->
-                    <div class="text-center py-6 text-slate-400">
-                        <i data-lucide="package-search" class="w-10 h-10 mx-auto mb-2 opacity-20"></i>
-                        <p class="text-xs font-bold uppercase tracking-widest">No Active Investment</p>
-                        <button onclick="triggerDeposit()" class="text-primary text-[10px] font-black underline mt-2">Start Earning 10% Daily Now</button>
-                    </div>
-                </div>
+        <!-- CURRENT PROGRESS TRACKER -->
+        <div class="bg-white dark:bg-darkCard p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 dark:border-slate-800 w-full overflow-hidden shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-black text-base md:text-lg text-slate-700 dark:text-white">Active Plan Progress</h3>
+                <button onclick="showTab('investments')" class="text-[10px] font-bold text-primary uppercase tracking-widest">View All</button>
             </div>
-
-            <!-- EARNINGS CHART -->
-            <div class="bg-white dark:bg-darkCard p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800">
-                <h3 class="font-black text-lg mb-6">Performance Index</h3>
-                <canvas id="earningsChart" height="150"></canvas>
+            <!-- Progress list container -->
+            <div id="home-active-plans" class="space-y-6 w-full overflow-hidden">
+                <!-- Sample Progress if empty -->
+                <div class="text-center py-6 text-slate-400">
+                    <i data-lucide="package-search" class="w-8 h-8 mx-auto mb-2 opacity-20"></i>
+                    <p class="text-[10px] font-bold uppercase tracking-widest">No Active Investment</p>
+                    <button onclick="triggerDeposit()" class="text-primary text-[10px] font-black underline mt-2">Start Earning 10% Daily</button>
+                </div>
             </div>
         </div>
 
-        <!-- RIGHT: RECENT ACTIVITY & TIPS -->
-        <div class="space-y-8">
-            
-            <!-- RECENT TRANSACTIONS -->
-            <div class="bg-white dark:bg-darkCard p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-black text-lg">Activity</h3>
-                    <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-400"></i>
-                </div>
-                <div id="recent-list" class="space-y-4">
-                    <!-- Items injected by JS -->
-                </div>
-            </div>
-
-            <!-- SECURITY TIP (Reasonable Content) -->
-            <div class="bg-primary/10 border border-primary/20 p-6 rounded-[2rem]">
-                <div class="flex items-center space-x-2 text-primary mb-2">
-                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
-                    <span class="text-[10px] font-black uppercase">Safety Tip</span>
-                </div>
-                <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Withdrawals are processed every 1-3 hours. Never share your <b>Withdrawal Password</b> with anyone claiming to be a Fidelity Wealth agent.
-                </p>
+        <!-- EARNINGS CHART -->
+        <div class="bg-white dark:bg-darkCard p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 dark:border-slate-800 w-full overflow-hidden shadow-sm">
+            <h3 class="font-black text-base md:text-lg mb-6 text-slate-700 dark:text-white">Performance Index</h3>
+            <!-- Wrapper for canvas to prevent width expansion -->
+            <div class="w-full overflow-hidden">
+                <canvas id="earningsChart" height="150" class="w-full"></canvas>
             </div>
         </div>
-
     </div>
+
+    <!-- RIGHT: RECENT ACTIVITY & TIPS (Added min-w-0) -->
+    <div class="space-y-8 w-full min-w-0 overflow-x-hidden">
+        
+        <!-- RECENT TRANSACTIONS -->
+        <div class="bg-white dark:bg-darkCard p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 dark:border-slate-800 w-full overflow-hidden shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-black text-base md:text-lg text-slate-700 dark:text-white">Activity</h3>
+                <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-400"></i>
+            </div>
+            <div id="recent-list" class="space-y-4 w-full overflow-hidden">
+                <!-- Items injected by JS -->
+            </div>
+        </div>
+
+        <!-- SECURITY TIP -->
+        <div class="bg-primary/10 border border-primary/20 p-6 rounded-[2rem] w-full overflow-hidden">
+            <div class="flex items-center space-x-2 text-primary mb-2">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                <span class="text-[10px] font-black uppercase tracking-widest">Safety Tip</span>
+            </div>
+            <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                Withdrawals are processed every 1-3 hours. Never share your <b>Withdrawal Password</b> with anyone.
+            </p>
+        </div>
+    </div>
+</div>
 </div>
 
         <!-- INVESTMENTS TAB -->
@@ -334,11 +338,11 @@
     
     <!-- HEADER: Title on Left, Button on Right -->
     <div class="flex items-center justify-between mb-10 w-full">
-        <h3 class="text-xl md:text-2xl font-black">My Investment Portfolio</h3>
+        <h3 class="text-xl md:text-2xl font-black">My Invest. Portfolio</h3>
         
         <!-- Action Button (Pinned Right) -->
         <button onclick="triggerDeposit()" class="bg-primary hover:bg-yellow-500 text-slate-900 px-5 py-3 md:px-7 md:py-4 rounded-2xl font-black flex items-center transition-all active:scale-95 shadow-lg shadow-primary/20 uppercase text-[10px] md:text-xs tracking-widest whitespace-nowrap">
-            <i data-lucide="plus-circle" class="mr-2 w-4 h-4"></i> Create New Investment
+            <i data-lucide="plus-circle" class="mr-2 w-4 h-4"></i> New Invest.
         </button>
     </div>
 
@@ -969,18 +973,18 @@ startPayoutTimer();
                     const progress = (inv.earned / (inv.amount * 2)) * 100;
 
                     return `
-                    <div class="bg-white dark:bg-darkCard border border-slate-100 dark:border-slate-800 rounded-[2rem] overflow-hidden shadow-sm">
-                        <div onclick="toggleDetails(${index})" class="p-6 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                                    <i data-lucide="trending-up" class="w-5 h-5 text-slate-400"></i>
-                                </div>
-                                <h4 class="font-black">₦${inv.amount.toLocaleString()}</h4>
-                            </div>
-                            <i data-lucide="chevron-down" id="chevron-${index}" class="w-5 h-5 text-slate-300 transition-transform"></i>
-                        </div>
+                    <div class="bg-white dark:bg-darkCard border border-slate-100 dark:border-slate-800 rounded-[2rem] overflow-hidden shadow-sm w-full">
+    <div onclick="toggleDetails(${index})" class="p-5 md:p-6 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors w-full">
+        <div class="flex items-center space-x-3 md:space-x-4 min-w-0">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex-shrink-0 flex items-center justify-center">
+                <i data-lucide="trending-up" class="w-5 h-5 text-slate-400"></i>
+            </div>
+            <h4 class="font-black text-sm md:text-base truncate">₦${inv.amount.toLocaleString()}</h4>
+        </div>
+        <i data-lucide="chevron-down" id="chevron-${index}" class="w-5 h-5 text-slate-300 flex-shrink-0 transition-transform"></i>
+    </div>
 
-                        <div id="details-${index}" class="hidden p-6 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/10">
+    <div id="details-${index}" class="hidden p-5 md:p-6 border-t border-slate-50 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/10 w-full">
                             <div class="grid grid-cols-2 gap-4 mb-6">
                                 <div><p class="text-[9px] font-bold text-slate-400 uppercase">Daily</p><p class="text-sm font-black text-green-500">₦${dailyROI.toLocaleString()}</p></div>
                                 <div><p class="text-[9px] font-bold text-slate-400 uppercase">Earned</p><p class="text-sm font-black">₦${inv.earned.toLocaleString()}</p></div>
