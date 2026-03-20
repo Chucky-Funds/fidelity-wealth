@@ -157,17 +157,17 @@
                 <form class="space-y-3.5">
                     <div class="space-y-1">
                         <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
-                        <input type="text" placeholder="Johnathan Doe" class="compact-input">
+                        <input type="text" placeholder="Johnathan Doe" class="compact-input" required>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div class="space-y-1">
                             <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Email Address</label>
-                            <input type="email" placeholder="john@email.com" class="compact-input">
+                            <input type="email" placeholder="john@email.com" class="compact-input" required>
                         </div>
                         <div class="space-y-1">
                             <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Age</label>
-                            <input type="number" placeholder="18+" class="compact-input">
+                            <input type="number" placeholder="18+" class="compact-input" required>
                         </div>
                     </div>
 
@@ -175,18 +175,18 @@
                         <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Phone Number</label>
                         <div class="flex">
                             <span class="bg-slate-800 border border-slate-700 border-r-0 px-3 flex items-center rounded-l-xl text-slate-400 font-bold text-[11px]">+234</span>
-                            <input type="tel" placeholder="8012345678" class="compact-input rounded-l-none">
+                            <input type="tel" placeholder="8012345678" class="compact-input rounded-l-none" required>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div class="space-y-1">
                             <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Password</label>
-                            <input type="password" placeholder="••••" class="compact-input">
+                            <input type="password" placeholder="••••" class="compact-input" required>
                         </div>
                         <div class="space-y-1">
                             <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Confirm</label>
-                            <input type="password" placeholder="••••" class="compact-input">
+                            <input type="password" placeholder="••••" class="compact-input" required>
                         </div>
                     </div>
 
@@ -194,13 +194,13 @@
                         <label class="text-[9px] font-black text-yellow-500 uppercase tracking-widest ml-1">Human Verification</label>
                         <div class="flex space-x-2">
                             <div id="captchaCode" class="captcha-box flex-1 flex items-center justify-center rounded-xl text-yellow-500 font-bold text-lg italic italic">77RO</div>
-                            <input type="text" id="captchaInput" placeholder="Type Code" class="flex-1 compact-input text-center">
+                            <input type="text" id="captchaInput" placeholder="Type Code" class="flex-1 compact-input text-center" required>
                         </div>
                     </div>
 
                     <div class="flex items-center space-x-2 py-1">
-                        <input type="checkbox" id="terms" required class="w-3.5 h-3.5 rounded bg-slate-900 text-yellow-500">
-                        <label for="terms" class="text-[10px] text-slate-500">I agree to the <a href="../tpf/#terms" class="text-yellow-500 font-bold">Terms of Service</a> & <a href="../tpf/#privacy" class="text-yellow-500 font-bold">Privacy Policy</a></label>
+                        <input type="checkbox" id="terms" required class="w-3.5 h-3.5 rounded bg-slate-900 text-yellow-500" aria-required="true">
+                        <label for="terms" class="text-[12px] text-slate-500">I agree to the <a href="../tpf/#terms" class="text-yellow-500 font-bold">Terms of Service</a> & <a href="../tpf/#privacy" class="text-yellow-500 font-bold">Privacy Policy</a></label>
                     </div>
 
                     <button type="submit" id="signupBtn" disabled class="w-full bg-yellow-500 text-slate-900 font-black py-4 rounded-xl transition-all opacity-40 cursor-not-allowed uppercase tracking-widest text-xs">
