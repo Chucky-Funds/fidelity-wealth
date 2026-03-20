@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Access | Fidelity Wealth Scheme</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #020617; 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-y: auto;
+            padding: 40px 0;
+        }
+
+        .portal-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            width: 92%;
+            max-width: 440px;
+            border-radius: 2.5rem;
+            position: relative;
+            z-index: 10;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .form-slider {
+            display: flex;
+            width: 200%;
+            transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+            align-items: flex-start;
+        }
+
+        .form-page {
+            width: 50%;
+            padding: 1.5rem 2rem 2rem 2rem;
+            transition: opacity 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 2px;
+            background: #fbbf24;
+            transition: all 0.4s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        .compact-input {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 0.85rem;
+            width: 100%;
+            color: white;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .compact-input:focus { border-color: #fbbf24; background: rgba(30, 41, 59, 0.8); }
+
+        .captcha-box {
+            background: #1e293b;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 4px;
+            border: 1px dashed rgba(251, 191, 36, 0.4);
+            user-select: none;
+        }
+
+        .prefix-span {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-10px);
+            pointer-events: none;
+        }
+        .prefix-span.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        @media screen and (max-width: 768px) {
+            input { font-size: 16px !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-200">
+
+    <!-- BACK TO HOME BUTTON -->
+    <a href="../index.html" class="fixed top-6 right-6 z-[100] flex items-center space-x-2 bg-slate-900/50 hover:bg-yellow-500 hover:text-slate-900 border border-slate-700 px-4 py-2 rounded-full transition-all group">
+        <span class="text-xs font-bold uppercase tracking-widest">Home</span>
+        <i data-lucide="home" class="w-4 h-4"></i>
+    </a>
+
+    <!-- MAIN PORTAL -->
+    <div id="card" class="portal-card">
+        
+        <div id="card-header" class="pt-8 pb-4 text-center">
+            <div class="inline-flex items-center space-x-2 bg-yellow-500 p-2 rounded-xl mb-3 shadow-lg shadow-yellow-500/20">
+                <i data-lucide="shield-check" class="text-slate-900 w-5 h-5"></i>
+            </div>
+            <h2 class="text-lg font-black tracking-tighter uppercase text-white">Fidelity <span class="text-yellow-500">Wealth</span></h2>
+        </div>
+
+        <div id="card-nav" class="flex relative border-b border-slate-800/50">
+            <button onclick="switchTab('login')" id="nav-login" class="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-yellow-500 transition-colors">Login</button>
+            <button onclick="switchTab('create')" id="nav-create" class="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-slate-500 transition-colors">Create</button>
+            <div id="indicator" class="tab-indicator w-1/2 left-0"></div>
+        </div>
+
+        <div class="form-slider" id="slider">
+            
+            <!-- LOGIN SECTION -->
+            <div class="form-page" id="login-page">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-white">Welcome Back</h3>
+                    <p class="text-slate-500 text-xs">Enter your Email or Phone Number</p>
+                </div>
+                <form class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Account Identifier (Email or Phone)</label>
+                        <div class="relative flex items-center overflow-hidden rounded-xl">
+                            <span id="login-prefix" class="prefix-span absolute left-0 bg-slate-800 border-r border-slate-700 h-full flex items-center px-4 text-slate-400 font-bold text-xs">+234</span>
+                            <input type="text" id="login-input" placeholder="Email or Phone" class="compact-input transition-all" required>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Password</label>
+                        </div>
+                        <input type="password" placeholder="••••••••" class="compact-input" required>
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-black py-4 rounded-xl transition-all shadow-lg shadow-yellow-500/10 uppercase tracking-widest text-xs mt-2">
+                        Authorize Login
+                    </button>
+                </form>
+            </div>
+
+            <!-- CREATE ACCOUNT SECTION -->
+            <div class="form-page" id="create-page" style="opacity: 0;">
+                <div class="mb-5">
+                    <h3 class="text-xl font-bold text-white">New Account</h3>
+                    <p class="text-slate-500 text-xs">Registration for lending reserve</p>
+                </div>
+                <form class="space-y-3.5">
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                        <input type="text" placeholder="Johnathan Doe" class="compact-input">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Email Address</label>
+                            <input type="email" placeholder="john@email.com" class="compact-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Age</label>
+                            <input type="number" placeholder="18+" class="compact-input">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Phone Number</label>
+                        <div class="flex">
+                            <span class="bg-slate-800 border border-slate-700 border-r-0 px-3 flex items-center rounded-l-xl text-slate-400 font-bold text-[11px]">+234</span>
+                            <input type="tel" placeholder="8012345678" class="compact-input rounded-l-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Password</label>
+                            <input type="password" placeholder="••••" class="compact-input">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest ml-1">Confirm</label>
+                            <input type="password" placeholder="••••" class="compact-input">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[9px] font-black text-yellow-500 uppercase tracking-widest ml-1">Human Verification</label>
+                        <div class="flex space-x-2">
+                            <div id="captchaCode" class="captcha-box flex-1 flex items-center justify-center rounded-xl text-yellow-500 font-bold text-lg italic italic">77RO</div>
+                            <input type="text" id="captchaInput" placeholder="Type Code" class="flex-1 compact-input text-center">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 py-1">
+                        <input type="checkbox" id="terms" required class="w-3.5 h-3.5 rounded bg-slate-900 text-yellow-500">
+                        <label for="terms" class="text-[10px] text-slate-500">I agree to the <a href="../tpf/#terms" class="text-yellow-500 font-bold">Terms of Service</a> & <a href="../tpf/#privacy" class="text-yellow-500 font-bold">Privacy Policy</a></label>
+                    </div>
+
+                    <button type="submit" id="signupBtn" disabled class="w-full bg-yellow-500 text-slate-900 font-black py-4 rounded-xl transition-all opacity-40 cursor-not-allowed uppercase tracking-widest text-xs">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SMALL FOOTER -->
+    <footer class="mt-8 text-center text-slate-600">
+        <p class="text-[10px] font-bold uppercase tracking-[0.2em]">© 2024 Fidelity Wealth Scheme</p>
+        <p class="text-[9px] mt-1 opacity-50">Secure Institutional Asset Management & Global Lending</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const card = document.getElementById('card');
+        const slider = document.getElementById('slider');
+        const indicator = document.getElementById('indicator');
+        const navLogin = document.getElementById('nav-login');
+        const navCreate = document.getElementById('nav-create');
+        const loginPage = document.getElementById('login-page');
+        const createPage = document.getElementById('create-page');
+
+        // LOGIN INPUT DETECTION (Email vs Phone)
+        const loginInput = document.getElementById('login-input');
+        const loginPrefix = document.getElementById('login-prefix');
+
+        loginInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            // Detect if first character is a number
+            if (val.length > 0 && /^[0-9]/.test(val)) {
+                loginPrefix.classList.add('active');
+                loginInput.style.paddingLeft = "4.5rem";
+            } else {
+                loginPrefix.classList.remove('active');
+                loginInput.style.paddingLeft = "1rem";
+            }
+        });
+
+        // Exact Height Calculation Logic
+        function updateCardHeight(tab) {
+            const headerH = document.getElementById('card-header').offsetHeight;
+            const navH = document.getElementById('card-nav').offsetHeight;
+            const activeFormH = (tab === 'login') ? loginPage.offsetHeight : createPage.offsetHeight;
+            card.style.height = (headerH + navH + activeFormH) + "px";
+        }
+
+        // CAPTCHA Engine
+        const captchaCodeBox = document.getElementById('captchaCode');
+        const captchaInput = document.getElementById('captchaInput');
+        const signupBtn = document.getElementById('signupBtn');
+        const codes = ["VX99", "77RO", "WLT1", "FID5", "2XGO"];
+        let activeCode = codes[Math.floor(Math.random() * codes.length)];
+        captchaCodeBox.innerText = activeCode;
+
+        captchaInput.addEventListener('input', (e) => {
+            if(e.target.value.toUpperCase() === activeCode) {
+                signupBtn.disabled = false;
+                signupBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+            } else {
+                signupBtn.disabled = true;
+                signupBtn.classList.add('opacity-40', 'cursor-not-allowed');
+            }
+        });
+
+        function switchTab(tab) {
+            if (tab === 'create') {
+                slider.style.transform = 'translateX(-50%)';
+                indicator.style.left = '50%';
+                navCreate.classList.replace('text-slate-500', 'text-yellow-500');
+                navLogin.classList.replace('text-yellow-500', 'text-slate-500');
+                loginPage.style.opacity = '0';
+                setTimeout(() => createPage.style.opacity = '1', 150);
+                window.location.hash = 'create';
+            } else {
+                slider.style.transform = 'translateX(0%)';
+                indicator.style.left = '0%';
+                navLogin.classList.replace('text-slate-500', 'text-yellow-500');
+                navCreate.classList.replace('text-yellow-500', 'text-slate-500');
+                createPage.style.opacity = '0';
+                setTimeout(() => loginPage.style.opacity = '1', 150);
+                window.location.hash = 'login';
+            }
+            setTimeout(() => updateCardHeight(tab), 50);
+        }
+
+        window.onload = () => {
+            const initialTab = (window.location.hash === '#create') ? 'create' : 'login';
+            switchTab(initialTab);
+            window.addEventListener('resize', () => updateCardHeight(window.location.hash === '#create' ? 'create' : 'login'));
+        };
+    </script>
+</body>
+</html>
