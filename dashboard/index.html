@@ -10,6 +10,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script>
+        // --- 0. AUTHENTICATION GUARD ---
+// Check if user data exists in local storage
+const checkUser = JSON.parse(localStorage.getItem('fidelity_user'));
+
+if (!checkUser || !checkUser.email) {
+    // If no email is found, the user is not logged in.
+    // Redirect them immediately to the home/login page.
+    window.location.replace("../"); 
+}
         tailwind.config = {
             darkMode: 'class',
             theme: {
