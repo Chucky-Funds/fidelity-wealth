@@ -387,76 +387,17 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
         <!-- ADVANCED INVESTMENTS TAB -->
 <!-- ADVANCED INVESTMENTS TAB -->
 <div id="tab-investments" class="tab-content hidden">
-    
-    <!-- HEADER: Title on Left, Button on Right -->
+    <!-- HEADER -->
     <div class="flex items-center justify-between mb-10 w-full">
         <h3 class="text-xl md:text-2xl font-black">My Invest. Portfolio</h3>
-        
-        <!-- Action Button (Pinned Right) -->
         <button onclick="triggerDeposit()" class="bg-primary hover:bg-yellow-500 text-slate-900 px-5 py-3 md:px-7 md:py-4 rounded-2xl font-black flex items-center transition-all active:scale-95 shadow-lg shadow-primary/20 uppercase text-[10px] md:text-xs tracking-widest whitespace-nowrap">
             <i data-lucide="plus-circle" class="mr-2 w-4 h-4"></i> New Invest.
         </button>
     </div>
 
-    <!-- STATIONARY EXAMPLE (Always Visible for Reference) -->
-    <div class="mb-10">
-        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 ml-4">Portfolio</p>
-        
-        <div class="bg-white dark:bg-darkCard border-2 border-primary/30 rounded-[2.5rem] overflow-hidden shadow-xl">
-            <!-- Header (Clickable) -->
-            <div onclick="toggleDetails('example')" class="p-6 md:p-8 flex items-center justify-between cursor-pointer bg-primary/5">
-                <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 rounded-2xl bg-primary text-slate-900 flex items-center justify-center">
-                        <i data-lucide="award" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-black text-lg">₦50,000.00</h4>
-                        <p class="text-[10px] font-bold text-primary uppercase tracking-widest">Example Portfolio</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span class="px-3 py-1 rounded-full text-[10px] font-black bg-green-500 text-white uppercase">ACTIVE</span>
-                    <i data-lucide="chevron-down" id="chevron-example" class="w-5 h-5 text-primary transition-transform"></i>
-                </div>
-            </div>
-
-            <!-- Breakdown (Visible Example) -->
-            <!-- ADD 'hidden' TO THIS LINE -->
-            <div id="details-example" class="hidden p-6 md:p-8 border-t border-slate-100 dark:border-slate-800">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                     <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Daily 10% ROI</p>
-                        <p class="font-black text-lg text-green-500">₦5,000.00</p>
-                    </div>
-                    <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Total Earned</p>
-                        <p class="font-black text-lg">₦35,000.00</p>
-                    </div>
-                    <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Days Elapsed</p>
-                        <p class="font-black text-lg">7 / 20 Days</p>
-                    </div>
-                    <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
-                        <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Target Payout</p>
-                        <p class="font-black text-lg text-primary">₦100,000.00</p>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="flex justify-between items-end">
-                        <span class="text-[10px] font-black text-slate-400 uppercase">Cycle Progress</span>
-                        <span class="text-xl font-black text-primary">35%</span>
-                    </div>
-                    <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div class="h-full bg-primary" style="width: 35%"></div>
-                    </div>
-                    <div class="flex justify-between text-[10px] font-bold text-slate-500">
-                        <p>Remaining: ₦65,000.00</p>
-                        <p>13 Days Left</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- This is where all dynamic portfolios will appear -->
+    <div id="dynamic-portfolio-container" class="space-y-6">
+        <!-- Portfolios injected by JS -->
     </div>
 </div>
 
@@ -878,81 +819,156 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
     let earningsChart; 
 
     function render() {
-        // Logic: Capital and Profit only count "Active" (non-matured) plans
-        const activePlans = state.investments.filter(i => i.status === 'Active');
-        const currentCapital = activePlans.reduce((sum, i) => sum + i.amount, 0);
-        const currentProfit = activePlans.reduce((sum, i) => sum + i.earned, 0);
+    // Logic: Capital and Profit only count "Active" (non-matured) plans
+    const activePlans = state.investments.filter(i => i.status === 'Active');
+    const currentCapital = activePlans.reduce((sum, i) => sum + i.amount, 0);
+    const currentProfit = activePlans.reduce((sum, i) => sum + i.earned, 0);
 
-        // Display Totals
-        document.getElementById('display-balance').innerText = state.user.balance.toLocaleString('en-NG', { minimumFractionDigits: 2 });
-        document.getElementById('stat-deposited').innerText = currentCapital.toLocaleString();
-        document.getElementById('stat-earned').innerText = currentProfit.toLocaleString();
-        
-        // Referral Bonus Display
-        const refBonusElement = document.querySelector('#tab-home .grid div:last-child p.text-xl');
-        if(refBonusElement) refBonusElement.innerText = "₦" + (state.user.referralBalance || 0).toLocaleString();
+    // 1. Display Totals
+    document.getElementById('display-balance').innerText = state.user.balance.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+    document.getElementById('stat-deposited').innerText = currentCapital.toLocaleString();
+    document.getElementById('stat-earned').innerText = currentProfit.toLocaleString();
+    
+    // 2. Referral Bonus Display
+    const refBonusElement = document.querySelector('#tab-home .grid div:last-child p.text-xl');
+    if(refBonusElement) refBonusElement.innerText = "₦" + (state.user.referralBalance || 0).toLocaleString();
 
-        document.getElementById('welcome-msg').innerText = `Welcome back, ${state.user.name.split(' ')[0]}`;
-        
-        // Profile Sync
-        document.getElementById('profile-name-header').innerText = state.user.name;
-        document.getElementById('profile-email-header').innerText = state.user.email;
-        document.getElementById('edit-name').value = state.user.name;
-        document.getElementById('edit-email').value = state.user.email;
-        document.getElementById('edit-phone').value = (state.user.phone || "").replace("+234", "");
+    document.getElementById('welcome-msg').innerText = `Welcome back, ${state.user.name.split(' ')[0]}`;
+    
+    // 3. Profile Sync
+    document.getElementById('profile-name-header').innerText = state.user.name;
+    document.getElementById('profile-email-header').innerText = state.user.email;
+    document.getElementById('edit-name').value = state.user.name;
+    document.getElementById('edit-email').value = state.user.email;
+    document.getElementById('edit-phone').value = (state.user.phone || "").replace("+234", "");
+    document.getElementById('edit-age').value = state.user.age || "";
 
-        // Activity List
-        const recentHtml = state.transactions.slice(0, 5).map(t => `
-            <div class="flex items-center justify-between p-1">
-                <div class="flex items-center space-x-3">
-                    <div class="p-2 rounded-lg ${t.type === 'Withdraw' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}">
-                        <i data-lucide="${t.type === 'Withdraw' ? 'arrow-up-right' : 'trending-up'}" class="w-4 h-4"></i>
-                    </div>
-                    <div><p class="text-sm font-bold">${t.type}</p><p class="text-[10px] text-slate-500">${t.date}</p></div>
+    // 4. Activity List
+    const recentHtml = state.transactions.slice(0, 5).map(t => `
+        <div class="flex items-center justify-between p-1">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 rounded-lg ${t.type === 'Withdraw' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}">
+                    <i data-lucide="${t.type === 'Withdraw' ? 'arrow-up-right' : 'trending-up'}" class="w-4 h-4"></i>
                 </div>
-                <p class="text-sm font-black ${t.type === 'Withdraw' ? 'text-red-500' : 'text-green-500'}">
-                    ${t.type === 'Withdraw' ? '-' : '+'}₦${t.amount.toLocaleString()}
-                </p>
+                <div><p class="text-sm font-bold">${t.type}</p><p class="text-[10px] text-slate-500">${t.date}</p></div>
             </div>
-        `).join('');
-        document.getElementById('recent-list').innerHTML = recentHtml || '<p class="text-xs text-slate-500 text-center py-4">No activity yet</p>';
+            <p class="text-sm font-black ${t.type === 'Withdraw' ? 'text-red-500' : 'text-green-500'}">
+                ${t.type === 'Withdraw' ? '-' : '+'}₦${t.amount.toLocaleString()}
+            </p>
+        </div>
+    `).join('');
+    document.getElementById('recent-list').innerHTML = recentHtml || '<p class="text-xs text-slate-500 text-center py-4">No activity yet</p>';
 
-        // Active Plan Progress Tracker (Home Tab)
-        const homeProgressContainer = document.getElementById('home-active-plans');
-        if (activePlans.length === 0) {
-            homeProgressContainer.innerHTML = `<div class="text-center py-6 text-slate-400">No active portfolios</div>`;
+    // 5. Active Plan Progress Tracker (Small Bars on Home Tab)
+    const homeProgressContainer = document.getElementById('home-active-plans');
+    if (activePlans.length === 0) {
+        homeProgressContainer.innerHTML = `<div class="text-center py-6 text-slate-400">No active portfolios</div>`;
+    } else {
+        homeProgressContainer.innerHTML = activePlans.map((inv, idx) => {
+            const progress = (inv.earned / (inv.amount * 2)) * 100;
+            return `
+            <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl mb-2 border border-slate-100 dark:border-slate-800">
+                <div class="flex justify-between mb-2">
+                    <span class="text-xs font-black">₦${inv.amount.toLocaleString()} Plan</span>
+                    <span class="text-[10px] text-primary font-bold">${Math.round(progress)}%</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-primary" style="width: ${progress}%"></div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // 6. Dynamic Investment List (Big Detailed Cards in Investment Tab)
+    const portfolioContainer = document.getElementById('dynamic-portfolio-container');
+    if (portfolioContainer) {
+        if (state.investments.length === 0) {
+            portfolioContainer.innerHTML = `<div class="text-center py-20 opacity-50"><p>No investments made yet.</p></div>`;
         } else {
-            homeProgressContainer.innerHTML = activePlans.map((inv, idx) => {
-                const progress = (inv.earned / (inv.amount * 2)) * 100;
+            portfolioContainer.innerHTML = state.investments.map((inv, idx) => {
+                // MATH CALCULATIONS
+                const dailyROI = inv.amount * 0.10;
+                const targetPayout = inv.amount * 2.00;
+                const totalEarned = inv.earned;
+                const remainingToEarn = Math.max(0, targetPayout - totalEarned);
+                const daysElapsed = Math.min(20, Math.floor(totalEarned / dailyROI));
+                const daysLeft = 20 - daysElapsed;
+                const progressPercent = Math.min(100, (totalEarned / targetPayout) * 100);
+                const isCompleted = inv.status === 'Completed';
+
                 return `
-                <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl mb-2 border border-slate-100 dark:border-slate-800">
-                    <div class="flex justify-between mb-2">
-                        <span class="text-xs font-black">₦${inv.amount.toLocaleString()} Plan</span>
-                        <span class="text-[10px] text-primary font-bold">${Math.round(progress)}%</span>
+                <div class="bg-white dark:bg-darkCard border-2 ${isCompleted ? 'border-slate-200 dark:border-slate-800' : 'border-primary/30'} rounded-[2.5rem] overflow-hidden shadow-xl mb-6">
+                    <div onclick="toggleDetails('portfolio-${idx}')" class="p-6 md:p-8 flex items-center justify-between cursor-pointer ${isCompleted ? 'bg-slate-50/50 dark:bg-slate-900/20' : 'bg-primary/5'}">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-2xl ${isCompleted ? 'bg-slate-200 text-slate-500' : 'bg-primary text-slate-900'} flex items-center justify-center">
+                                <i data-lucide="${isCompleted ? 'check-circle' : 'award'}" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-lg">₦${inv.amount.toLocaleString()}</h4>
+                                <p class="text-[10px] font-bold ${isCompleted ? 'text-slate-400' : 'text-primary'} uppercase tracking-widest">${inv.date} Deposit</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black ${isCompleted ? 'bg-slate-400' : 'bg-green-500'} text-white uppercase">${inv.status}</span>
+                            <i data-lucide="chevron-down" id="chevron-portfolio-${idx}" class="w-5 h-5 text-primary transition-transform"></i>
+                        </div>
                     </div>
-                    <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <div class="h-full bg-primary" style="width: ${progress}%"></div>
+
+                    <div id="details-portfolio-${idx}" class="hidden p-6 md:p-8 border-t border-slate-100 dark:border-slate-800">
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                             <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Daily 10% ROI</p>
+                                <p class="font-black text-lg text-green-500">₦${dailyROI.toLocaleString()}</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Total Earned</p>
+                                <p class="font-black text-lg">₦${totalEarned.toLocaleString()}</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Days Elapsed</p>
+                                <p class="font-black text-lg">${daysElapsed} / 20 Days</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Target Payout</p>
+                                <p class="font-black text-lg text-primary">₦${targetPayout.toLocaleString()}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end">
+                                <span class="text-[10px] font-black text-slate-400 uppercase">Cycle Progress</span>
+                                <span class="text-xl font-black text-primary">${Math.round(progressPercent)}%</span>
+                            </div>
+                            <div class="w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] font-bold text-slate-500">
+                                <p>Remaining: ₦${remainingToEarn.toLocaleString()}</p>
+                                <p>${daysLeft} Days Left</p>
+                            </div>
+                        </div>
                     </div>
                 </div>`;
             }).join('');
         }
-
-        // Matured List for Withdrawal Tab
-        const maturedContainer = document.getElementById('matured-list');
-        const withdrawableInvestments = state.investments.filter(i => i.earned > 0);
-        if (maturedContainer) {
-            maturedContainer.innerHTML = withdrawableInvestments.map(inv => `
-                <label class="relative flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-3xl cursor-pointer hover:border-primary">
-                    <div class="flex items-center space-x-4">
-                        <input type="radio" name="selected_investment" value="${inv.id}" data-max="${inv.earned}" class="w-4 h-4 text-primary" required>
-                        <div><p class="text-[10px] font-black text-slate-400 uppercase">Avail. Profit</p><p class="text-sm font-black">₦${inv.earned.toLocaleString()}</p></div>
-                    </div>
-                </label>`).join('');
-        }
-
-        lucide.createIcons();
-        updateChart();
     }
+
+    // 7. Matured List for Withdrawal Tab
+    const maturedContainer = document.getElementById('matured-list');
+    const withdrawableInvestments = state.investments.filter(i => i.earned > 0);
+    if (maturedContainer) {
+        maturedContainer.innerHTML = withdrawableInvestments.map(inv => `
+            <label class="relative flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 rounded-3xl cursor-pointer hover:border-primary">
+                <div class="flex items-center space-x-4">
+                    <input type="radio" name="selected_investment" value="${inv.id}" data-max="${inv.earned}" class="w-4 h-4 text-primary" required>
+                    <div><p class="text-[10px] font-black text-slate-400 uppercase">Avail. Profit</p><p class="text-sm font-black">₦${inv.earned.toLocaleString()}</p></div>
+                </div>
+            </label>`).join('');
+    }
+
+    lucide.createIcons();
+    updateChart();
+}
 
     // --- 4. CHART ENGINE ---
 
@@ -1169,10 +1185,14 @@ function updateChart() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function toggleDetails(idx) {
-        const content = document.getElementById(`details-${idx}`);
-        if (content) content.classList.toggle('hidden');
+    function toggleDetails(id) {
+    const content = document.getElementById(`details-${id}`);
+    const chevron = document.getElementById(`chevron-${id}`);
+    if (content) {
+        content.classList.toggle('hidden');
+        if (chevron) chevron.classList.toggle('rotate-180');
     }
+}
 
     function toggleWithdrawForm() {
         const selected = document.querySelector('input[name="selected_investment"]:checked');
