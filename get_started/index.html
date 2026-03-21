@@ -314,7 +314,7 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
         const existingUser = localStorage.getItem('fidelity_user');
 
         if (tab === 'create' && existingUser) {
-            alert("You have already created an account. Please proceed to Login.");
+            alert("You have already created an account on this device. Please proceed to Login.");
             switchTab('login'); // Force stay on login
             return;
         }
@@ -364,7 +364,7 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
         }
     });
 
-    // --- 4. REGISTRATION (Save to LocalStorage) ---
+    // --- 4. REGISTRATION (Save to LocalStorage & Sync Dashboard) ---
     const regForm = document.getElementById('register-form');
     regForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -377,7 +377,7 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
             return;
         }
 
-        // Object containing all user information
+        // Object for Login validation
         const userData = {
             fullName: document.getElementById('reg-fullname').value,
             email: document.getElementById('reg-email').value.toLowerCase(),
@@ -386,14 +386,32 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
             password: password
         };
 
-        // Save entire object as a string in LocalStorage
+        // Save for Login access
         localStorage.setItem('fidelity_user', JSON.stringify(userData));
+
+        // SYNC: Initialize the Dashboard State immediately so Name/Email show up there
+        let fwState = JSON.parse(localStorage.getItem('fw_state')) || { 
+            user: {}, 
+            investments: [], 
+            transactions: [],
+            settings: { darkMode: true }
+        };
+
+        fwState.user = {
+            name: userData.fullName,
+            email: userData.email,
+            phone: userData.phone,
+            age: userData.dob,
+            balance: fwState.user.balance || 0 // Keep balance if exists, else 0
+        };
+
+        localStorage.setItem('fw_state', JSON.stringify(fwState));
         
-        alert("Account Created Successfully! You can now log in.");
+        alert("Account Created Successfully! You can now log in with your credentials.");
         switchTab('login');
     });
 
-    // --- 5. LOGIN (Validate from LocalStorage) ---
+    // --- 5. LOGIN (Validate & Redirect) ---
     const loginForm = document.getElementById('login-form');
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -401,21 +419,21 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
         const inputID = document.getElementById('login-input').value.toLowerCase();
         const inputPass = document.getElementById('login-password').value;
         
-        // Retrieve data from LocalStorage
         const storedData = localStorage.getItem('fidelity_user');
 
         if (!storedData) {
-            alert("No account found on this device. Please create an account.");
+            alert("No account found on this device. Please create an account first.");
             return;
         }
 
         const user = JSON.parse(storedData);
 
-        // Check if Input (Email OR Phone) matches and Password matches
+        // Logic: Check if Identifier (Email OR Phone) matches AND Password matches
         if ((inputID === user.email || inputID === user.phone) && inputPass === user.password) {
-            alert("Login Successful! Welcome, " + user.fullName);
-            // You can redirect the user here, e.g.:
-            // window.location.href = "dashboard.html";
+            alert("Login Successful! Welcome back, " + user.fullName);
+            
+            // Redirect to dashboard folder
+            window.location.href = "/dashboard/"; 
         } else {
             alert("Error: Incorrect credentials. Please check your email/phone and password.");
         }
@@ -426,12 +444,13 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
         const initialTab = (window.location.hash === '#create') ? 'create' : 'login';
         switchTab(initialTab);
         
-        // Set DOB limit to 18 years ago
+        // Set DOB limit to 18 years ago (Safety Check)
         const dobInput = document.getElementById('dob');
         const today = new Date();
         const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
         if(dobInput) dobInput.setAttribute("max", eighteenYearsAgo.toISOString().split("T")[0]);
         
+        // Recalculate card height on resize
         window.addEventListener('resize', () => updateCardHeight(window.location.hash === '#create' ? 'create' : 'login'));
     };
 </script>

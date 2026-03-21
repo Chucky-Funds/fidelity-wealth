@@ -1321,7 +1321,74 @@ startPayoutTimer();
         });
     }
 }
+// --- 1. SYNCED STATE ENGINE ---
+// Pull the account data created during registration
+const accountData = JSON.parse(localStorage.getItem('fidelity_user'));
 
+// Initialize state using the account data, or defaults if not found
+let state = JSON.parse(localStorage.getItem('fw_state')) || {
+    user: { 
+        name: accountData ? accountData.fullName : "Guest User", 
+        email: accountData ? accountData.email : "guest@mail.com",
+        phone: accountData ? accountData.phone : "",
+        age: accountData ? accountData.dob : "",
+        balance: 0 
+    },
+    investments: [],
+    transactions: [],
+    settings: {
+        darkMode: true
+    }
+};
+
+// If the user just registered/logged in but fw_state already existed from a previous session, 
+// we force the name and email to match the current login
+if (accountData) {
+    state.user.name = accountData.fullName;
+    state.user.email = accountData.email;
+    state.user.phone = accountData.phone;
+    state.user.age = accountData.dob;
+}
+
+function save() {
+    localStorage.setItem('fw_state', JSON.stringify(state));
+    // Also update the master account data so login credentials stay updated
+    const updatedAccount = {
+        fullName: state.user.name,
+        email: state.user.email,
+        phone: state.user.phone,
+        dob: state.user.age,
+        password: accountData ? accountData.password : "" // Keep existing password
+    };
+    localStorage.setItem('fidelity_user', JSON.stringify(updatedAccount));
+    render();
+}
+
+// --- 2. UPDATED PROFILE UPDATE FUNCTION ---
+function updateProfile(e) {
+    e.preventDefault();
+    const newName = document.getElementById('edit-name').value;
+    const newEmail = document.getElementById('edit-email').value;
+    const newPhone = document.getElementById('edit-phone').value;
+    const newAge = document.getElementById('edit-age').value;
+    const newPass = document.getElementById('edit-pass').value;
+    
+    // Update local state
+    if (newName) state.user.name = newName;
+    if (newEmail) state.user.email = newEmail;
+    if (newPhone) state.user.phone = newPhone;
+    if (newAge) state.user.age = newAge;
+
+    // If they changed the password, update the master account object specifically
+    if (newPass) {
+        const acc = JSON.parse(localStorage.getItem('fidelity_user'));
+        acc.password = newPass;
+        localStorage.setItem('fidelity_user', JSON.stringify(acc));
+    }
+    
+    save(); // Saves and re-renders everything
+    alert("Profile and Security settings synced successfully!");
+}
     </script>
 </body>
 </html>
