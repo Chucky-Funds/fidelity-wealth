@@ -787,23 +787,28 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
     <!-- JS ENGINE -->
     <script>
     // --- 1. CORE STATE & SYNCING ---
-    const accountData = JSON.parse(localStorage.getItem('fidelity_user'));
+    // --- 1. CORE STATE & SYNCING ---
+const accountData = JSON.parse(localStorage.getItem('fidelity_user'));
 
-    let state = JSON.parse(localStorage.getItem('fw_state')) || {
-        user: { 
-            name: accountData ? accountData.fullName : "User", 
-            email: accountData ? accountData.email : "user@fidelity.com", 
-            phone: accountData ? accountData.phone : "",
-            age: accountData ? accountData.dob : "",
-            balance: 0,
-            referralBalance: 0 
-        },
-        investments: [],
-        transactions: [],
-        notifications: [],
-        pendingReferrals: [],
-        settings: { darkMode: true }
+// Load existing state
+let state = JSON.parse(localStorage.getItem('fw_state')) || {};
+
+// SAFE INITIALIZATION: Ensure every property exists as an array/object
+if (!state.user) {
+    state.user = { 
+        name: accountData ? accountData.fullName : "User", 
+        email: accountData ? accountData.email : "user@fidelity.com", 
+        phone: accountData ? accountData.phone : "",
+        age: accountData ? accountData.dob : "",
+        balance: 0,
+        referralBalance: 0 
     };
+}
+if (!state.investments) state.investments = [];
+if (!state.transactions) state.transactions = [];
+if (!state.notifications) state.notifications = [];
+if (!state.pendingReferrals) state.pendingReferrals = [];
+if (!state.settings) state.settings = { darkMode: true };
 
     if (accountData) {
         state.user.name = accountData.fullName;
@@ -873,6 +878,10 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
     let earningsChart; 
 
     function render() {
+           const investments = state.investments || [];
+    const notifications = state.notifications || [];
+
+    const activePlans = investments.filter(i => i.status === 'Active');
         // --- Dynamic Initial Logic ---
     const userName = state.user.name || "User";
     // Get first two letters and format them (e.g., Ibrahim -> Ib)
@@ -887,7 +896,6 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
     const profileInitials = document.getElementById('profile-initials');
     if (profileInitials) profileInitials.innerText = formattedInitials;
 
-        const activePlans = state.investments.filter(i => i.status === 'Active');
         const currentCapital = activePlans.reduce((sum, i) => sum + i.amount, 0);
         const currentProfit = activePlans.reduce((sum, i) => sum + i.earned, 0);
 
