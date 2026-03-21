@@ -1195,17 +1195,28 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
     section.style.opacity = selected ? "1" : "0.4";
     inputs.forEach(i => i.disabled = !selected);
 
-    // SPECIFIC LOGIC FOR REFERRAL INPUT
-    const refInput = document.getElementById('withdraw-amount-ref');
-    if (state.user.referralBalance <= 0) {
-        refInput.readOnly = true;
-        refInput.placeholder = "₦0.00 available";
-        // Even if the form is "enabled", we keep this one visually locked
-        refInput.classList.add('opacity-50', 'cursor-not-allowed');
-    } else {
-        refInput.readOnly = false;
-        refInput.placeholder = "Enter amount";
-        refInput.classList.remove('opacity-50', 'cursor-not-allowed');
+    if (selected) {
+        // 1. Set the MAX limit for the Investment input based on the selected portfolio
+        const invInput = document.getElementById('withdraw-amount-invest');
+        const maxProfit = parseFloat(selected.dataset.max);
+        invInput.max = maxProfit;
+        invInput.placeholder = `Max: ₦${maxProfit.toLocaleString()}`;
+
+        // 2. Set the MAX limit for the Referral input
+        const refInput = document.getElementById('withdraw-amount-ref');
+        const maxRef = state.user.referralBalance;
+        
+        if (maxRef <= 0) {
+            refInput.readOnly = true;
+            refInput.value = "";
+            refInput.placeholder = "₦0.00 available";
+            refInput.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+            refInput.readOnly = false;
+            refInput.max = maxRef;
+            refInput.placeholder = `Max: ₦${maxRef.toLocaleString()}`;
+            refInput.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
     }
 }
 
