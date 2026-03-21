@@ -1078,49 +1078,66 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
 
     function handleWithdrawal(e) {
     e.preventDefault();
+    
+    const submitBtn = document.getElementById('withdraw-submit-btn');
     const selected = document.querySelector('input[name="selected_investment"]:checked');
     const invAmt = parseFloat(document.getElementById('withdraw-amount-invest').value) || 0;
     const refAmt = parseFloat(document.getElementById('withdraw-amount-ref').value) || 0;
     const totalWithdraw = invAmt + refAmt;
 
-    // 1. Basic Validation
+    // 1. Validation (Immediate)
     if (totalWithdraw <= 0) return alert("Please enter an amount.");
-    
-    // 2. Portfolio Check
     if (invAmt > 0) {
-        if (!selected) return alert("Select a matured portfolio to withdraw investment profits.");
-        if (invAmt > parseFloat(selected.dataset.max)) return alert("Insufficient funds in this matured portfolio.");
+        if (!selected) return alert("Select a matured portfolio first.");
+        if (invAmt > parseFloat(selected.dataset.max)) return alert("Insufficient funds in selected portfolio.");
     }
-    
-    // 3. Referral Pot Check
     if (refAmt > state.user.referralBalance) return alert("Insufficient referral balance.");
+    if (totalWithdraw > state.user.balance) return alert("Insufficient total balance.");
 
-    // 4. Global Balance Safety Check (The ultimate protection)
-    if (totalWithdraw > state.user.balance) return alert("Insufficient total available balance.");
+    // 2. Visual State: CHANGE BUTTON TO PROCESSING
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<span class="flex items-center justify-center"><i data-lucide="refresh-cw" class="animate-spin mr-2 w-4 h-4"></i> Securely Processing...</span>`;
+    lucide.createIcons(); // Initialize the new spin icon
 
-    // EXECUTION
-    if (selected && invAmt > 0) {
-        const target = state.investments.find(i => i.id == selected.value);
-        target.earned -= invAmt;
-    }
-    
-    state.user.referralBalance -= refAmt;
-    state.user.balance -= totalWithdraw; // CORRECT: Subtracts total from the global balance
+    // 3. START 5-SECOND DELAY
+    setTimeout(() => {
+        // --- THIS RUNS AFTER 5 SECONDS ---
 
-    state.transactions.unshift({ 
-        type: 'Withdraw', 
-        amount: totalWithdraw, 
-        date: new Date().toLocaleDateString(), 
-        status: 'Pending' 
-    });
+        // Deduct from Portfolio if applicable
+        if (selected && invAmt > 0) {
+            const target = state.investments.find(i => i.id == selected.value);
+            target.earned -= invAmt;
+        }
+        
+        // Deduct from Referral and Global Balance
+        state.user.referralBalance -= refAmt;
+        state.user.balance -= totalWithdraw;
 
-    addNotification('Withdrawal Requested', `₦${totalWithdraw.toLocaleString()} payout processing.`, 'withdrawal');
-    save();
-    
-    alert("Withdrawal request successful!");
-    e.target.reset();
-    document.getElementById('withdraw-amount-total').value = "₦0.00";
-    toggleWithdrawForm();
+        // Record Transaction
+        state.transactions.unshift({ 
+            type: 'Withdraw', 
+            amount: totalWithdraw, 
+            date: new Date().toLocaleDateString(), 
+            status: 'Success' // Changed to Success for this simulation
+        });
+
+        // Add Notification
+        addNotification('Payout Disbursed', `₦${totalWithdraw.toLocaleString()} has been sent to your bank account.`, 'withdrawal');
+        
+        save(); // Update Storage and UI
+        
+        // Final Alert
+        alert("Transaction Finalized! ₦" + totalWithdraw.toLocaleString() + " has been sent to your destination bank account.");
+        
+        // Reset Form and Button
+        e.target.reset();
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        document.getElementById('withdraw-amount-total').value = "₦0.00";
+        toggleWithdrawForm();
+        
+    }, 5000); // 5000 milliseconds = 5 seconds
 }
 
     function updateProfile(e) {
