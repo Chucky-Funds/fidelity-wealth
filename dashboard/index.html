@@ -328,7 +328,7 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
                 <div class="p-2 bg-purple-500/10 rounded-lg text-purple-500"><i data-lucide="users" class="w-4 h-4"></i></div>
                 <span class="text-[10px] font-black text-slate-400 uppercase">Ref. Bonus</span>
             </div>
-            <p class="text-xl font-black">₦0.00</p>
+            <p class="text-xl font-black">₦<span id="stat-referral">0.00</span></p>
         </div>
     </div>
 
@@ -903,8 +903,11 @@ if (!state.settings) state.settings = { darkMode: true };
         document.getElementById('stat-deposited').innerText = currentCapital.toLocaleString();
         document.getElementById('stat-earned').innerText = currentProfit.toLocaleString();
         
-        const refBonusElement = document.querySelector('#tab-home .grid div:last-child p.text-xl');
-        if(refBonusElement) refBonusElement.innerText = "₦" + (state.user.referralBalance || 0).toLocaleString();
+        // 2. Referral Bonus Display
+const refBonusElement = document.getElementById('stat-referral');
+if (refBonusElement) {
+    refBonusElement.innerText = (state.user.referralBalance || 0).toLocaleString('en-NG', { minimumFractionDigits: 2 });
+}
 
         document.getElementById('welcome-msg').innerText = `Welcome back, ${state.user.name.split(' ')[0]}`;
         
@@ -1097,7 +1100,7 @@ if (!state.settings) state.settings = { darkMode: true };
         const finalAmount = parseFloat(amount);
         closeDepositModal();
         let handler = PaystackPop.setup({
-            key: 'pk_test_335a79da994d7c1777f46c1ef44abf7f4535491a',
+            key: 'pk_live_8ee6bf2733a29f68c0bc8bb70a7e115362594676',
             email: state.user.email,
             amount: finalAmount * 100,
             currency: "NGN",
