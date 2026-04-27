@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Fidelity Wealth Scheme</title>
+    <title>Dashboard | Fidelity Invest Scheme</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -104,7 +104,7 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
         <div class="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
             <i data-lucide="shield-check" class="text-slate-900 w-6 h-6"></i>
         </div>
-        <span class="font-black text-xl tracking-tighter uppercase">Fidelity <span class="text-primary">Wealth</span></span>
+        <span class="font-black text-xl tracking-tighter uppercase">Fidelity <span class="text-primary">Invest</span></span>
     </div>
 
     <!-- 2. NAVIGATION (Middle - Takes all available space) -->
@@ -666,7 +666,7 @@ input[type="date"]::-webkit-datetime-edit-year-field:focus {
                     </div>
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10 gap-2 w-full">
                         <span class="text-[10px] font-black text-slate-400 uppercase shrink-0">Official Email</span>
-                        <span class="text-[11px] font-bold text-slate-700 dark:text-white break-all">fidelitywealth9@gmail.com</span>
+                        <span class="text-[11px] font-bold text-slate-700 dark:text-white break-all">fidelityInvest9@gmail.com</span>
                     </div>
                 </div>
 
@@ -1056,7 +1056,7 @@ if (refBonusElement) {
         const totalEarned = growthData[growthData.length - 1];
         const insightBox = document.getElementById('chart-insight-text');
         if (insightBox) {
-            insightBox.innerHTML = totalEarned > 0 ? `Your portfolio is performing at 100% efficiency. Your total wealth has grown by <b class="text-primary">₦${totalEarned.toLocaleString()}</b> since you started.` : "Analysis pending... complete your first deposit to see growth trends.";
+            insightBox.innerHTML = totalEarned > 0 ? `Your portfolio is performing at 100% efficiency. Your total Invest has grown by <b class="text-primary">₦${totalEarned.toLocaleString()}</b> since you started.` : "Analysis pending... complete your first deposit to see growth trends.";
         }
         if (earningsChart) earningsChart.destroy();
         const chartCtx = ctx.getContext('2d');
@@ -1219,7 +1219,7 @@ if (refBonusElement) {
     function inviteViaWhatsApp() {
         const phone = document.getElementById('wa-phone').value;
         if (!phone) return alert("Enter phone.");
-        window.open(`https://wa.me/234${phone}?text=${encodeURIComponent("Invest your  money with Fidelity Wealth: https://bit.ly/4bzYxKr and get 2X back on your deposit by earning 10% daily!")}`, '_blank');
+        window.open(`https://wa.me/234${phone}?text=${encodeURIComponent("Invest your  money with Fidelity Invest: https://bit.ly/4bzYxKr and get 2X back on your deposit by earning 10% daily!")}`, '_blank');
         state.pendingReferrals.push({ id: Date.now(), timestamp: Date.now(), amount: 100, processed: false });
         addNotification('Invite Sent', 'Your bonus is pending.', 'referral');
         save();
